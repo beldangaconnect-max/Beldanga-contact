@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Rajmistri Service Providers</title>
+<title>Service App</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -11,61 +11,50 @@ body{
   font-family:Arial, sans-serif;
   background:#000;
   color:#fff;
-  padding-bottom:90px;
+  padding-bottom:80px;
 }
 h1{
   text-align:center;
-  padding:15px;
+  padding:12px;
   font-size:22px;
 }
-.search-box{
+.search{
   width:calc(100% - 24px);
   margin:0 12px 10px;
   padding:12px;
-  border-radius:10px;
   border:none;
+  border-radius:10px;
   font-size:16px;
 }
 .card{
   background:#111;
-  margin:12px;
-  padding:15px;
+  margin:10px 12px;
+  padding:14px;
   border-radius:12px;
 }
 .phone{
   color:#00e676;
-  font-size:18px;
   font-weight:bold;
 }
-.card h3{
-  margin:6px 0 2px;
-}
-.card p{
-  margin:0;
-  font-size:14px;
-  color:#bbb;
-}
-.call-btn{
-  margin-top:10px;
-  padding:8px 16px;
-  background:#00e676;
+.call{
+  margin-top:8px;
+  padding:8px 14px;
   border:none;
   border-radius:6px;
-  cursor:pointer;
+  background:#00e676;
 }
 .fab{
   position:fixed;
+  right:18px;
   bottom:80px;
-  right:20px;
-  width:56px;
-  height:56px;
+  width:55px;
+  height:55px;
   border-radius:50%;
-  background:#00e676;
   font-size:30px;
   border:none;
-  cursor:pointer;
+  background:#00e676;
 }
-.bottom-nav{
+.bottom{
   position:fixed;
   bottom:0;
   left:0;
@@ -74,13 +63,12 @@ h1{
   display:flex;
   justify-content:space-around;
   padding:10px 0;
-  border-top:1px solid #222;
 }
-.bottom-nav div{
-  font-size:13px;
+.bottom div{
   color:#bbb;
+  font-size:13px;
 }
-.bottom-nav .active{
+.bottom .active{
   color:#00e676;
   font-weight:bold;
 }
@@ -89,24 +77,23 @@ h1{
 .modal{
   display:none;
   position:fixed;
-  top:0; left:0;
-  width:100%; height:100%;
+  inset:0;
   background:rgba(0,0,0,.8);
 }
-.modal-content{
+.modal-box{
   background:#111;
-  margin:80px 20px;
+  margin:70px 15px;
   padding:20px;
   border-radius:12px;
 }
-.modal-content input{
+.modal-box input,select{
   width:100%;
   padding:10px;
   margin-bottom:10px;
-  border-radius:8px;
   border:none;
+  border-radius:8px;
 }
-.save-btn{
+.save{
   width:100%;
   padding:10px;
   background:#00e676;
@@ -118,82 +105,103 @@ h1{
 
 <body>
 
-<h1>Rajmistri Service Providers</h1>
+<h1>Service Providers</h1>
 
-<input type="text" class="search-box" placeholder="Search name or service"
-onkeyup="searchService(this.value)">
+<input class="search" placeholder="Search name or service"
+onkeyup="search(this.value)">
 
-<div id="serviceList"></div>
+<div id="list"></div>
 
-<button class="fab" onclick="openModal()">+</button>
+<button class="fab" onclick="openForm()">+</button>
 
-<div class="bottom-nav">
-  <div class="active">Rajmistri</div>
-  <div>Electrician</div>
-  <div>Plumber</div>
-  <div>Tution</div>
-  <div>Mobile</div>
+<div class="bottom">
+  <div class="active" onclick="setCat('Rajmistri',this)">Rajmistri</div>
+  <div onclick="setCat('Electrician',this)">Electrician</div>
+  <div onclick="setCat('Plumber',this)">Plumber</div>
+  <div onclick="setCat('Tution',this)">Tution</div>
+  <div onclick="setCat('Mobile',this)">Mobile</div>
 </div>
 
-<!-- Add Service Modal -->
+<!-- Add Form -->
 <div class="modal" id="modal">
-  <div class="modal-content">
-    <h3>Add New Service</h3>
+  <div class="modal-box">
+    <h3>Add Service</h3>
     <input id="name" placeholder="Name">
-    <input id="service" placeholder="Service">
+    <select id="service">
+      <option>Rajmistri</option>
+      <option>Electrician</option>
+      <option>Plumber</option>
+      <option>Tution</option>
+      <option>Mobile</option>
+    </select>
     <input id="phone" placeholder="Phone">
-    <button class="save-btn" onclick="addService()">Save</button>
+    <button class="save" onclick="add()">Save</button>
   </div>
 </div>
 
 <script>
-let services = [
- {name:"Rahim Boks", service:"Electrician", phone:"865437289"}
+let currentCat="Rajmistri";
+
+let data=[
+ {name:"Rahim Boks",service:"Electrician",phone:"865437289"},
+ {name:"Kamal Sheikh",service:"Rajmistri",phone:"9123456789"},
+ {name:"Salim",service:"Plumber",phone:"9000000000"}
 ];
 
 function render(){
-  let list = document.getElementById("serviceList");
-  list.innerHTML="";
-  services.forEach(s=>{
-    list.innerHTML += `
-    <div class="card">
-      <div class="phone">${s.phone}</div>
-      <h3>${s.name}</h3>
-      <p>${s.service}</p>
-      <button class="call-btn" onclick="location.href='tel:${s.phone}'">Call</button>
-    </div>`;
-  });
+ let list=document.getElementById("list");
+ list.innerHTML="";
+ data.filter(d=>d.service===currentCat)
+ .forEach(d=>{
+  list.innerHTML+=`
+  <div class="card">
+    <div class="phone">${d.phone}</div>
+    <b>${d.name}</b><br>
+    <small>${d.service}</small><br>
+    <button class="call" onclick="location.href='tel:${d.phone}'">Call</button>
+  </div>`;
+ });
 }
 
-function searchService(text){
-  text=text.toLowerCase();
-  document.getElementById("serviceList").innerHTML="";
-  services.filter(s=>
-    s.name.toLowerCase().includes(text) ||
-    s.service.toLowerCase().includes(text)
-  ).forEach(s=>{
-    document.getElementById("serviceList").innerHTML += `
-    <div class="card">
-      <div class="phone">${s.phone}</div>
-      <h3>${s.name}</h3>
-      <p>${s.service}</p>
-      <button class="call-btn" onclick="location.href='tel:${s.phone}'">Call</button>
-    </div>`;
-  });
+function setCat(cat,el){
+ currentCat=cat;
+ document.querySelectorAll(".bottom div").forEach(d=>d.classList.remove("active"));
+ el.classList.add("active");
+ render();
 }
 
-function openModal(){
-  document.getElementById("modal").style.display="block";
+function search(txt){
+ txt=txt.toLowerCase();
+ let list=document.getElementById("list");
+ list.innerHTML="";
+ data.filter(d=>
+  d.service===currentCat &&
+  (d.name.toLowerCase().includes(txt) ||
+   d.phone.includes(txt))
+ ).forEach(d=>{
+  list.innerHTML+=`
+  <div class="card">
+    <div class="phone">${d.phone}</div>
+    <b>${d.name}</b><br>
+    <small>${d.service}</small><br>
+    <button class="call" onclick="location.href='tel:${d.phone}'">Call</button>
+  </div>`;
+ });
 }
-function addService(){
-  services.push({
-    name:name.value,
-    service:service.value,
-    phone:phone.value
-  });
-  modal.style.display="none";
-  name.value=service.value=phone.value="";
-  render();
+
+function openForm(){
+ document.getElementById("modal").style.display="block";
+}
+
+function add(){
+ data.push({
+  name:name.value,
+  service:service.value,
+  phone:phone.value
+ });
+ name.value=phone.value="";
+ modal.style.display="none";
+ render();
 }
 
 render();
