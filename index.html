@@ -1,114 +1,170 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Beldanga Connect</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f2f2f2;
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      background: #0a7cff;
-      color: #fff;
-      padding: 15px;
-      text-align: center;
-    }
-    .container { padding: 15px; }
-    .filter { margin-bottom: 15px; }
-    select {
-      width: 100%;
-      padding: 10px;
-      font-size: 16px;
-    }
-    .card {
-      background: #fff;
-      padding: 15px;
-      margin-bottom: 12px;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    .name { font-size: 18px; font-weight: bold; }
-    .service { color: #555; margin-top: 4px; }
-    .buttons { margin-top: 10px; }
-    .buttons a {
-      display: inline-block;
-      padding: 8px 12px;
-      margin-right: 8px;
-      border-radius: 5px;
-      text-decoration: none;
-      color: #fff;
-      font-size: 14px;
-    }
-    .call { background: #28a745; }
-    .whatsapp { background: #25d366; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beldanga Connect</title>
+
+<style>
+body{
+  margin:0;
+  font-family: Arial, sans-serif;
+  background:#0e0e0e;
+  color:#fff;
+}
+
+/* Top bar */
+.topbar{
+  display:flex;
+  align-items:center;
+  padding:12px;
+  background:#121212;
+}
+.menu-btn{
+  font-size:22px;
+  margin-right:12px;
+  cursor:pointer;
+}
+.title{
+  font-size:20px;
+  font-weight:bold;
+}
+
+/* Drawer */
+.drawer{
+  position:fixed;
+  top:0;
+  left:-260px;
+  width:250px;
+  height:100%;
+  background:#111;
+  padding:20px;
+  transition:0.3s;
+  z-index:10;
+}
+.drawer a{
+  display:block;
+  padding:12px 0;
+  color:#fff;
+  text-decoration:none;
+  border-bottom:1px solid #222;
+}
+.drawer.open{ left:0; }
+
+/* Search */
+.search{
+  padding:10px;
+}
+.search input{
+  width:100%;
+  padding:10px;
+  border-radius:6px;
+  border:none;
+}
+
+/* List */
+.list{
+  padding:10px;
+}
+.card{
+  background:#161616;
+  padding:12px;
+  border-radius:8px;
+  margin-bottom:10px;
+}
+.card .number{ color:#3ddc84; }
+.card .name{ font-size:18px; }
+.card .service{ color:#aaa; }
+.call-btn{
+  margin-top:8px;
+  display:inline-block;
+  padding:6px 10px;
+  background:#25d366;
+  color:#000;
+  border-radius:5px;
+  text-decoration:none;
+}
+
+/* Bottom tabs */
+.bottom{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  background:#121212;
+  display:flex;
+  justify-content:space-around;
+  padding:8px 0;
+}
+.bottom div{
+  font-size:12px;
+  text-align:center;
+  cursor:pointer;
+}
+
+/* Floating button */
+.fab{
+  position:fixed;
+  right:20px;
+  bottom:70px;
+  width:55px;
+  height:55px;
+  background:#00c853;
+  border-radius:50%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:30px;
+  color:#000;
+}
+</style>
 </head>
+
 <body>
 
-<header>
-  <h2>Beldanga Connect</h2>
-  <p>One Call – All Services</p>
-</header>
+<!-- Drawer -->
+<div class="drawer" id="drawer">
+  <h3>Beldanga Connect</h3>
+  <a href="#">🔧 Boring</a>
+  <a href="#">💬 Feedback</a>
+</div>
 
-<div class="container">
+<!-- Top bar -->
+<div class="topbar">
+  <div class="menu-btn" onclick="toggleDrawer()">☰</div>
+  <div class="title">Rajmistri Service Providers</div>
+</div>
 
-  <div class="filter">
-    <select id="serviceFilter" onchange="filterService()">
-      <option value="All">সব সার্ভিস</option>
-      <option value="Electrician">Electrician</option>
-      <option value="Plumber">Plumber</option>
-      <option value="Rajmistri">Rajmistri</option>
-      <option value="Tuition">Tuition Master</option>
-    </select>
+<!-- Search -->
+<div class="search">
+  <input type="text" placeholder="Search">
+</div>
+
+<!-- List -->
+<div class="list">
+  <div class="card">
+    <div class="number">9865437289</div>
+    <div class="name">Rahim Boks</div>
+    <div class="service">Electrician</div>
+    <a class="call-btn" href="tel:9865437289">Call</a>
   </div>
+</div>
 
-  <!-- Card 1 -->
-  <div class="card Electrician">
-    <div class="name">Rahim Sk</div>
-    <div class="service">Electrician – Beldanga</div>
-    <div class="buttons">
-      <a class="call" href="tel:9000000001">Call</a>
-      <a class="whatsapp" href="https://wa.me/919000000001">WhatsApp</a>
-    </div>
-  </div>
+<!-- Floating button -->
+<div class="fab">+</div>
 
-  <!-- Card 2 -->
-  <div class="card Plumber">
-    <div class="name">Salim Ali</div>
-    <div class="service">Plumber – Begunbari</div>
-    <div class="buttons">
-      <a class="call" href="tel:9000000002">Call</a>
-      <a class="whatsapp" href="https://wa.me/919000000002">WhatsApp</a>
-    </div>
-  </div>
-
-  <!-- Card 3 -->
-  <div class="card Rajmistri">
-    <div class="name">Kalam Sk</div>
-    <div class="service">Rajmistri – Beldanga</div>
-    <div class="buttons">
-      <a class="call" href="tel:9000000003">Call</a>
-      <a class="whatsapp" href="https://wa.me/919000000003">WhatsApp</a>
-    </div>
-  </div>
-
+<!-- Bottom tabs -->
+<div class="bottom">
+  <div>Rajmistri</div>
+  <div>Electrician</div>
+  <div>Plumber</div>
+  <div>Tution</div>
+  <div>Mobile</div>
 </div>
 
 <script>
-function filterService() {
-  const value = document.getElementById("serviceFilter").value;
-  const cards = document.getElementsByClassName("card");
-  for (let i = 0; i < cards.length; i++) {
-    if (value === "All") {
-      cards[i].style.display = "block";
-    } else {
-      cards[i].style.display = cards[i].classList.contains(value) ? "block" : "none";
-    }
-  }
+function toggleDrawer(){
+  document.getElementById("drawer").classList.toggle("open");
 }
 </script>
 
