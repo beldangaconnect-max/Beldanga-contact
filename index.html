@@ -1,211 +1,248 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Service App</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+package com.example.serviceapp;
 
-<style>
-body{
-  margin:0;
-  font-family:Arial, sans-serif;
-  background:#000;
-  color:#fff;
-  padding-bottom:80px;
-}
-h1{
-  text-align:center;
-  padding:12px;
-  font-size:22px;
-}
-.search{
-  width:calc(100% - 24px);
-  margin:0 12px 10px;
-  padding:12px;
-  border:none;
-  border-radius:10px;
-  font-size:16px;
-}
-.card{
-  background:#111;
-  margin:10px 12px;
-  padding:14px;
-  border-radius:12px;
-}
-.phone{
-  color:#00e676;
-  font-weight:bold;
-}
-.call{
-  margin-top:8px;
-  padding:8px 14px;
-  border:none;
-  border-radius:6px;
-  background:#00e676;
-}
-.fab{
-  position:fixed;
-  right:18px;
-  bottom:80px;
-  width:55px;
-  height:55px;
-  border-radius:50%;
-  font-size:30px;
-  border:none;
-  background:#00e676;
-}
-.bottom{
-  position:fixed;
-  bottom:0;
-  left:0;
-  width:100%;
-  background:#111;
-  display:flex;
-  justify-content:space-around;
-  padding:10px 0;
-}
-.bottom div{
-  color:#bbb;
-  font-size:13px;
-}
-.bottom .active{
-  color:#00e676;
-  font-weight:bold;
-}
+public class ServiceProvider {
 
-/* Modal */
-.modal{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.8);
+    private String name;
+    private String phone;
+    private String service;
+    private String area;
+    private boolean available;
+
+    public ServiceProvider() {}
+
+    public ServiceProvider(String name, String phone, String service, String area, boolean available) {
+        this.name = name;
+        this.phone = phone;
+        this.service = service;
+        this.area = area;
+        this.available = available;
+    }
+
+    public String getName() {
+        return name == null ? "No Name" : name;
+    }
+
+    public String getPhone() {
+        return phone == null ? "" : phone;
+    }
+
+    public String getService() {
+        return service == null ? "" : service;
+    }
+
+    public String getArea() {
+        return area == null ? "" : area;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
 }
-.modal-box{
-  background:#111;
-  margin:70px 15px;
-  padding:20px;
-  border-radius:12px;
+package com.example.serviceapp;
+
+import android.content.*;
+import android.net.Uri;
+import android.view.*;
+import android.widget.*;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+import java.util.List;
+
+public class ProviderAdapter extends RecyclerView.Adapter<ProviderAdapter.ViewHolder> {
+
+    Context context;
+    List<ServiceProvider> list;
+
+    public ProviderAdapter(Context context, List<ServiceProvider> list) {
+        this.context = context;
+        this.list = list;
+    }
+
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(context).inflate(R.layout.item_provider, parent, false);
+        return new ViewHolder(v);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        ServiceProvider p = list.get(position);
+
+        holder.name.setText(p.getName());
+        holder.phone.setText(p.getPhone());
+        holder.service.setText(p.getService());
+
+        holder.call.setOnClickListener(v -> {
+            Intent i = new Intent(Intent.ACTION_DIAL);
+            i.setData(Uri.parse("tel:" + p.getPhone()));
+            context.startActivity(i);
+        });
+    }
+
+    @Override
+    public int getItemCount() {
+        return list.size();
+    }
+
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView name, phone, service;
+        Button call;
+
+        ViewHolder(View item) {
+            super(item);
+            name = item.findViewById(R.id.txtName);
+            phone = item.findViewById(R.id.txtPhone);
+            service = item.findViewById(R.id.txtService);
+            call = item.findViewById(R.id.btnCall);
+        }
+    }
 }
-.modal-box input,select{
-  width:100%;
-  padding:10px;
-  margin-bottom:10px;
-  border:none;
-  border-radius:8px;
+      package com.example.serviceapp;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.*;
+import android.widget.EditText;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.*;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.*;
+import java.util.*;
+
+public class MainActivity extends AppCompatActivity {
+
+    RecyclerView recyclerView;
+    ProviderAdapter adapter;
+    List<ServiceProvider> list = new ArrayList<>();
+    FirebaseFirestore db;
+    EditText search;
+
+    @Override
+    protected void onCreate(Bundle b) {
+        super.onCreate(b);
+        setContentView(R.layout.activity_main);
+
+        recyclerView = findViewById(R.id.recyclerView);
+        search = findViewById(R.id.searchBox);
+        FloatingActionButton fab = findViewById(R.id.fabAdd);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new ProviderAdapter(this, list);
+        recyclerView.setAdapter(adapter);
+
+        db = FirebaseFirestore.getInstance();
+        loadData();
+
+        fab.setOnClickListener(v ->
+                startActivity(new Intent(this, AddProviderActivity.class)));
+
+        search.addTextChangedListener(new TextWatcher() {
+            public void beforeTextChanged(CharSequence s,int a,int b,int c){}
+            public void afterTextChanged(Editable e){}
+            public void onTextChanged(CharSequence s,int a,int b,int c){
+                filter(s.toString());
+            }
+        });
+    }
+
+    void loadData() {
+        db.collection("providers")
+                .addSnapshotListener((v, e) -> {
+                    list.clear();
+                    if (v != null) {
+                        for (DocumentSnapshot d : v) {
+                            list.add(d.toObject(ServiceProvider.class));
+                        }
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+    }
+
+    void filter(String text) {
+        List<ServiceProvider> f = new ArrayList<>();
+        for (ServiceProvider p : list) {
+            if (p.getName().toLowerCase().contains(text.toLowerCase()) ||
+                p.getPhone().contains(text)) {
+                f.add(p);
+            }
+        }
+        recyclerView.setAdapter(new ProviderAdapter(this, f));
+    }
 }
-.save{
-  width:100%;
-  padding:10px;
-  background:#00e676;
-  border:none;
-  border-radius:8px;
+          package com.example.serviceapp;
+
+import android.os.Bundle;
+import android.widget.*;
+import androidx.appcompat.app.AppCompatActivity;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+public class AddProviderActivity extends AppCompatActivity {
+
+    EditText name, phone, service, area;
+    Button save;
+    FirebaseFirestore db;
+
+    @Override
+    protected void onCreate(Bundle b) {
+        super.onCreate(b);
+        setContentView(R.layout.activity_add_provider);
+
+        name = findViewById(R.id.etName);
+        phone = findViewById(R.id.etPhone);
+        service = findViewById(R.id.etService);
+        area = findViewById(R.id.etArea);
+        save = findViewById(R.id.btnSave);
+
+        db = FirebaseFirestore.getInstance();
+
+        save.setOnClickListener(v -> {
+            ServiceProvider p = new ServiceProvider(
+                    name.getText().toString(),
+                    phone.getText().toString(),
+                    service.getText().toString(),
+                    area.getText().toString(),
+                    true
+            );
+
+            db.collection("providers").add(p);
+            finish();
+        });
+    }
 }
-</style>
-</head>
+          <LinearLayout ... android:orientation="vertical">
 
-<body>
+    <EditText
+        android:id="@+id/searchBox"
+        android:hint="Search name or service"/>
 
-<h1>Service Providers</h1>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"/>
 
-<input class="search" placeholder="Search name or service"
-onkeyup="search(this.value)">
-
-<div id="list"></div>
-
-<button class="fab" onclick="openForm()">+</button>
-
-<div class="bottom">
-  <div class="active" onclick="setCat('Rajmistri',this)">Rajmistri</div>
-  <div onclick="setCat('Electrician',this)">Electrician</div>
-  <div onclick="setCat('Plumber',this)">Plumber</div>
-  <div onclick="setCat('Tution',this)">Tution</div>
-  <div onclick="setCat('Mobile',this)">Mobile</div>
-</div>
-
-<!-- Add Form -->
-<div class="modal" id="modal">
-  <div class="modal-box">
-    <h3>Add Service</h3>
-    <input id="name" placeholder="Name">
-    <select id="service">
-      <option>Rajmistri</option>
-      <option>Electrician</option>
-      <option>Plumber</option>
-      <option>Tution</option>
-      <option>Mobile</option>
-    </select>
-    <input id="phone" placeholder="Phone">
-    <button class="save" onclick="add()">Save</button>
-  </div>
-</div>
-
-<script>
-let currentCat="Rajmistri";
-
-let data=[
- {name:"Rahim Boks",service:"Electrician",phone:"865437289"},
- {name:"Kamal Sheikh",service:"Rajmistri",phone:"9123456789"},
- {name:"Salim",service:"Plumber",phone:"9000000000"}
-];
-
-function render(){
- let list=document.getElementById("list");
- list.innerHTML="";
- data.filter(d=>d.service===currentCat)
- .forEach(d=>{
-  list.innerHTML+=`
-  <div class="card">
-    <div class="phone">${d.phone}</div>
-    <b>${d.name}</b><br>
-    <small>${d.service}</small><br>
-    <button class="call" onclick="location.href='tel:${d.phone}'">Call</button>
-  </div>`;
- });
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAdd"
+        android:src="@android:drawable/ic_input_add"/>
+    </LinearLayout>
+      <LinearLayout ... android:orientation="vertical">
+    <TextView android:id="@+id/txtName"/>
+    <TextView android:id="@+id/txtPhone"/>
+    <TextView android:id="@+id/txtService"/>
+    <Button android:id="@+id/btnCall" android:text="Call"/>
+    </LinearLayout>
+      <LinearLayout ... android:orientation="vertical">
+    <EditText android:id="@+id/etName" android:hint="Name"/>
+    <EditText android:id="@+id/etPhone" android:hint="Phone"/>
+    <EditText android:id="@+id/etService" android:hint="Service"/>
+    <EditText android:id="@+id/etArea" android:hint="Area"/>
+    <Button android:id="@+id/btnSave" android:text="Save"/>
+  
+    </LinearLayout>
+      rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
 }
-
-function setCat(cat,el){
- currentCat=cat;
- document.querySelectorAll(".bottom div").forEach(d=>d.classList.remove("active"));
- el.classList.add("active");
- render();
-}
-
-function search(txt){
- txt=txt.toLowerCase();
- let list=document.getElementById("list");
- list.innerHTML="";
- data.filter(d=>
-  d.service===currentCat &&
-  (d.name.toLowerCase().includes(txt) ||
-   d.phone.includes(txt))
- ).forEach(d=>{
-  list.innerHTML+=`
-  <div class="card">
-    <div class="phone">${d.phone}</div>
-    <b>${d.name}</b><br>
-    <small>${d.service}</small><br>
-    <button class="call" onclick="location.href='tel:${d.phone}'">Call</button>
-  </div>`;
- });
-}
-
-function openForm(){
- document.getElementById("modal").style.display="block";
-}
-
-function add(){
- data.push({
-  name:name.value,
-  service:service.value,
-  phone:phone.value
- });
- name.value=phone.value="";
- modal.style.display="none";
- render();
-}
-
-render();
-</script>
-
-</body>
-</html>
+      
