@@ -61,9 +61,59 @@ section{padding:14px;}
 </header>
 
 <!-- LOGIN -->
-<section id="login">
-  <input id="userId" placeholder="মোবাইল / ইমেইল">
-  <button onclick="login()">Login (OTP)</button>
+<section id="login" style="padding-top:40px;">
+  <div style="
+    background:#fff;
+    max-width:360px;
+    margin:0 auto;
+    padding:20px;
+    border-radius:16px;
+    box-shadow:0 8px 20px rgba(0,0,0,.15);
+    text-align:center;
+  ">
+
+    <h3 style="margin:0 0 6px;">লগইন করুন</h3>
+    <p style="font-size:13px;opacity:.8;margin-bottom:16px;">
+      নিজের সার্ভিস যোগ ও এডিট করতে লগইন করুন
+    </p>
+
+    <label style="font-size:13px;display:block;text-align:left;margin-bottom:4px;">
+      মোবাইল নম্বর / ইমেইল
+    </label>
+    <input
+      id="userId"
+      type="text"
+      placeholder="যেমন: 9XXXXXXXXX"
+      style="
+        width:100%;
+        padding:12px;
+        border-radius:10px;
+        border:1px solid #ccc;
+        margin-bottom:14px;
+      "
+    >
+
+    <button
+      onclick="login()"
+      style="
+        width:100%;
+        padding:12px;
+        border-radius:12px;
+        background:#1976d2;
+        color:#fff;
+        border:none;
+        font-weight:bold;
+        font-size:15px;
+      "
+    >
+      🔐 OTP দিয়ে লগইন করুন
+    </button>
+
+    <p style="font-size:12px;margin-top:12px;opacity:.7;">
+      🔒 আপনার তথ্য সম্পূর্ণ নিরাপদ
+    </p>
+
+  </div>
 </section>
 
 <!-- HOME -->
