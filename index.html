@@ -138,14 +138,14 @@ footer{
 
 <!-- ADD -->
 <section id="add" class="admin-only">
-  <div id="addForm">
+<form id="addForm" onsubmit="addContact(); return false;">
     <h3>➕ নতুন কন্টাক্ট যোগ করুন</h3>
     <input id="name" placeholder="নাম">
     <input id="work" placeholder="কাজ">
     <input id="area" placeholder="এলাকা">
     <input id="phone" placeholder="মোবাইল / ইমেইল">
-    <button onclick="addContact()">Add Contact</button>
-  </div>
+<button type="submit">Add Contact</button>
+  </form>
 </section>
 
 <!-- ADMIN -->
