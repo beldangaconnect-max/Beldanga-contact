@@ -166,8 +166,11 @@ footer{
 
 <script>
 const ADMIN_PASSWORD = "5234";
-let isAdmin = false;
 
+/* 🔐 Admin state (saved) */
+let isAdmin = localStorage.getItem("isAdmin") === "true";
+
+/* Navigation */
 function go(id){
   ["home","add","admin"].forEach(s=>{
     document.getElementById(s).style.display="none";
@@ -179,10 +182,15 @@ function go(id){
     .classList.add("active");
 }
 
+/* Admin Login */
 function adminLogin(){
-  if(adminPass.value === ADMIN_PASSWORD){
+  if(adminPass.value.trim() === ADMIN_PASSWORD){
     isAdmin = true;
-    document.querySelectorAll(".admin-only").forEach(e=>e.style.display="block");
+    localStorage.setItem("isAdmin","true");
+
+    document.querySelectorAll(".admin-only")
+      .forEach(e=>e.style.display="block");
+
     go("add");
     alert("Admin Login Successful");
   }else{
@@ -190,34 +198,59 @@ function adminLogin(){
   }
 }
 
+/* Admin Logout */
 function adminLogout(){
   isAdmin = false;
-  document.querySelectorAll(".admin-only").forEach(e=>e.style.display="none");
+  localStorage.removeItem("isAdmin");
+
+  document.querySelectorAll(".admin-only")
+    .forEach(e=>e.style.display="none");
+
   go("home");
 }
 
+/* Add Contact (FIXED) */
 function addContact(){
   if(!isAdmin){
     alert("Admin login প্রয়োজন");
+    go("admin");
     return;
   }
-  if(!name.value || !work.value || !phone.value){
+
+  if(
+    name.value.trim()==="" ||
+    work.value.trim()==="" ||
+    phone.value.trim()===""
+  ){
     alert("সব ঘর পূরণ করুন");
     return;
   }
 
   let data = JSON.parse(localStorage.getItem("contacts") || "[]");
-  data.push({name:name.value, work:work.value, area:area.value, phone:phone.value});
+
+  data.push({
+    name: name.value.trim(),
+    work: work.value.trim(),
+    area: area.value.trim(),
+    phone: phone.value.trim()
+  });
+
   localStorage.setItem("contacts", JSON.stringify(data));
 
-  name.value = work.value = area.value = phone.value = "";
+  name.value = "";
+  work.value = "";
+  area.value = "";
+  phone.value = "";
+
   loadContacts();
   go("home");
 }
 
+/* Load Contacts */
 function loadContacts(){
   contactList.innerHTML="";
   let data = JSON.parse(localStorage.getItem("contacts") || "[]");
+
   data.forEach(c=>{
     contactList.innerHTML += `
     <div class="card contact">
@@ -231,6 +264,7 @@ function loadContacts(){
   });
 }
 
+/* Search */
 function searchContact(){
   let q = searchInput.value.toLowerCase();
   document.querySelectorAll(".contact").forEach(c=>{
@@ -238,6 +272,7 @@ function searchContact(){
   });
 }
 
+/* Service Select */
 function selectService(s){
   if(!isAdmin){
     alert("এই অপশন ব্যবহার করতে Admin Login করুন");
@@ -248,8 +283,15 @@ function selectService(s){
   go("add");
 }
 
+/* Init */
 go("home");
 loadContacts();
+
+/* 🔁 Restore admin session */
+if(isAdmin){
+  document.querySelectorAll(".admin-only")
+    .forEach(e=>e.style.display="block");
+}
 </script>
 
 </body>
