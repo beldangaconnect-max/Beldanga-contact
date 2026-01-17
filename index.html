@@ -9,7 +9,7 @@
 *{box-sizing:border-box;}
 body{
   margin:0;
-  font-family:Arial, sans-serif;
+  font-family:Arial,sans-serif;
   background:#f4f6f8;
   padding-bottom:70px;
 }
@@ -20,13 +20,6 @@ header{
   text-align:center;
 }
 section{padding:14px;}
-#searchInput{
-  width:100%;
-  padding:12px;
-  border-radius:10px;
-  border:1px solid #ccc;
-  margin-bottom:10px;
-}
 .service{
   background:#fff;
   padding:14px;
@@ -54,25 +47,16 @@ section{padding:14px;}
   text-decoration:none;
   font-weight:bold;
 }
-#addForm{
-  background:#fff;
-  padding:16px;
-  border-radius:16px;
-}
-#addForm input{
+#addForm input,#addForm button{
   width:100%;
   padding:12px;
   margin-bottom:10px;
   border-radius:8px;
-  border:1px solid #ccc;
 }
 #addForm button{
-  width:100%;
-  padding:14px;
   background:#1976d2;
-  color:white;
+  color:#fff;
   border:none;
-  border-radius:12px;
   font-weight:bold;
 }
 .admin-only{display:none;}
@@ -90,19 +74,9 @@ section{padding:14px;}
   flex:1;
   border:none;
   background:none;
-  font-size:14px;
   font-weight:bold;
 }
-#bottomNav button.active{
-  color:#1976d2;
-}
-footer{
-  background:#1976d2;
-  color:white;
-  text-align:center;
-  padding:10px;
-  font-size:12px;
-}
+#bottomNav button.active{color:#1976d2;}
 </style>
 </head>
 
@@ -115,41 +89,26 @@ footer{
 
 <!-- HOME -->
 <section id="home">
-  <input id="searchInput" placeholder="🔍 নাম বা কাজ লিখুন" onkeyup="searchContact()">
+  <div class="service" onclick="openService('ফার্নিচার মেকার')">🪑 ফার্নিচার মেকার</div>
+  <div class="service" onclick="openService('পেইন্টার')">🎨 পেইন্টার</div>
+  <div class="service" onclick="openService('ইলেকট্রিশিয়ান')">💡 ইলেকট্রিশিয়ান</div>
+  <div class="service" onclick="openService('রাজমিস্ত্রি')">🧱 রাজমিস্ত্রি</div>
+</section>
 
-  <!-- SERVICES -->
-  <div class="service" onclick="selectService('ফার্নিচার মেকার')">🪑 ফার্নিচার মেকার</div>
-  <div class="service" onclick="selectService('পেইন্টার')">🎨 পেইন্টার</div>
-  <div class="service" onclick="selectService('ইলেকট্রিশিয়ান')">💡 ইলেকট্রিশিয়ান</div>
-
-  <div class="service" onclick="selectService('রাজমিস্ত্রি')">🧱 রাজমিস্ত্রি</div>
-  <div class="service" onclick="selectService('প্লাম্বার')">🚰 প্লাম্বার</div>
-  <div class="service" onclick="selectService('গ্লাস ফিটার')">🪟 গ্লাস ফিটার</div>
-  <div class="service" onclick="selectService('অ্যালুমিনিয়াম ফ্যাব্রিকেশন')">🚪 অ্যালুমিনিয়াম ফ্যাব্রিকেশন</div>
-  <div class="service" onclick="selectService('ক্লিনার')">🧹 ক্লিনার</div>
-  <div class="service" onclick="selectService('ফায়ার সার্ভিস')">🧯 ফায়ার সার্ভিস</div>
-  <div class="service" onclick="selectService('মোবাইল রিপেয়ার')">🛠️ মোবাইল রিপেয়ার</div>
-  <div class="service" onclick="selectService('টেইলার')">🧵 টেইলার</div>
-  <div class="service" onclick="selectService('হাউস কিপার')">🏠 হাউস কিপার</div>
-  <div class="service" onclick="selectService('টেম্পো / পিকআপ ভ্যান')">🚚 টেম্পো / পিকআপ ভ্যান</div>
-
-  <div id="contactList"></div>
-<!-- SERVICE CONTACTS -->
+<!-- SERVICE PAGE -->
 <section id="servicePage" style="display:none;">
   <h3 id="serviceTitle"></h3>
   <div id="serviceContactList"></div>
-  
 </section>
 
 <!-- ADD -->
 <section id="add" class="admin-only">
-<form id="addForm" onsubmit="addContact(); return false;">
-    <h3>➕ নতুন কন্টাক্ট যোগ করুন</h3>
+  <form id="addForm" onsubmit="addContact();return false;">
     <input id="name" placeholder="নাম">
     <input id="work" placeholder="কাজ">
     <input id="area" placeholder="এলাকা">
-    <input id="phone" placeholder="মোবাইল / ইমেইল">
-<button type="submit">Add Contact</button>
+    <input id="phone" placeholder="মোবাইল">
+    <button type="submit">Add Contact</button>
   </form>
 </section>
 
@@ -160,184 +119,85 @@ footer{
   <button onclick="adminLogout()" class="admin-only">Logout</button>
 </section>
 
-<footer>© 2026 Beldanga Contact Database</footer>
-
 <!-- Bottom Nav -->
 <div id="bottomNav">
-  <button id="navHome" class="active" onclick="go('home')">🏠 Home</button>
-<button id="navAdd" onclick="goAddSafe()">➕ Add</button>
-  <button id="navAdmin" onclick="go('admin')">🔐 Admin</button>
+  <button onclick="go('home')">🏠 Home</button>
+  <button onclick="safeAdd()">➕ Add</button>
+  <button onclick="go('admin')">🔐 Admin</button>
 </div>
 
-    <script>
-const ADMIN_PASSWORD = "5234";
-
-/* 🔐 Restore admin state */
-let isAdmin = localStorage.getItem("isAdmin") === "true";
+<script>
+const ADMIN_PASSWORD="5234";
+let isAdmin = localStorage.getItem("isAdmin")==="true";
 
 /* Navigation */
 function go(id){
-  ["home","add","admin"].forEach(s=>{
-    document.getElementById(s).style.display="none";
-    document.getElementById("nav"+s.charAt(0).toUpperCase()+s.slice(1))
-      .classList.remove("active");
+  ["home","add","admin","servicePage"].forEach(s=>{
+    const el=document.getElementById(s);
+    if(el) el.style.display="none";
   });
   document.getElementById(id).style.display="block";
-  document.getElementById("nav"+id.charAt(0).toUpperCase()+id.slice(1))
-    .classList.add("active");
 }
 
-/* Safe Add Navigation */
-function goAddSafe(){
-  if(!isAdmin){
-    alert("Admin Login প্রয়োজন");
-    go("admin");
-    return;
-  }
+/* Admin */
+function adminLogin(){
+  if(adminPass.value===ADMIN_PASSWORD){
+    isAdmin=true;
+    localStorage.setItem("isAdmin","true");
+    document.querySelectorAll(".admin-only").forEach(e=>e.style.display="block");
+    go("home");
+  }else alert("Wrong password");
+}
+function adminLogout(){
+  isAdmin=false;
+  localStorage.removeItem("isAdmin");
+  document.querySelectorAll(".admin-only").forEach(e=>e.style.display="none");
+  go("home");
+}
+
+/* Safe Add */
+function safeAdd(){
+  if(!isAdmin){alert("Admin login প্রয়োজন");go("admin");return;}
   go("add");
 }
 
-/* Admin Login */
-function adminLogin(){
-  if(adminPass.value.trim() === ADMIN_PASSWORD){
-    isAdmin = true;
-    localStorage.setItem("isAdmin","true");
-
-    document.querySelectorAll(".admin-only")
-      .forEach(e=>e.style.display="block");
-
-    go("add");
-    alert("Admin Login Successful");
-  }else{
-    alert("Wrong Password");
-  }
-}
-
-/* Admin Logout */
-function adminLogout(){
-  isAdmin = false;
-  localStorage.removeItem("isAdmin");
-
-  document.querySelectorAll(".admin-only")
-    .forEach(e=>e.style.display="none");
-
-  go("home");
-}
-
-/* Add Contact (FIXED) */
+/* Add Contact */
 function addContact(){
-  if(!isAdmin){
-    alert("Admin login প্রয়োজন");
-    go("admin");
-    return;
+  if(!name.value||!work.value||!phone.value){
+    alert("সব ঘর পূরণ করুন");return;
   }
-
-  if(
-    name.value.trim()==="" ||
-    work.value.trim()==="" ||
-    phone.value.trim()===""
-  ){
-    alert("সব ঘর পূরণ করুন");
-    return;
-  }
-
-  let data = JSON.parse(localStorage.getItem("contacts") || "[]");
-
-  data.push({
-    name: name.value.trim(),
-    work: work.value.trim(),
-    area: area.value.trim(),
-    phone: phone.value.trim()
-  });
-
-  localStorage.setItem("contacts", JSON.stringify(data));
-
-  name.value="";
-  work.value="";
-  area.value="";
-  phone.value="";
-
-  loadContacts();
+  let data=JSON.parse(localStorage.getItem("contacts")||"[]");
+  data.push({name:name.value,work:work.value,area:area.value,phone:phone.value});
+  localStorage.setItem("contacts",JSON.stringify(data));
+  name.value=work.value=area.value=phone.value="";
   go("home");
 }
 
-/* Load Contacts */
-function loadContacts(){
-  contactList.innerHTML="";
-  let data = JSON.parse(localStorage.getItem("contacts") || "[]");
-
-  data.forEach(c=>{
-    contactList.innerHTML += `
-    <div class="card contact">
+/* Service Page */
+function openService(service){
+  go("servicePage");
+  document.getElementById("serviceTitle").innerText=service+" কন্টাক্ট";
+  let all=JSON.parse(localStorage.getItem("contacts")||"[]");
+  let list=document.getElementById("serviceContactList");
+  list.innerHTML="";
+  let f=all.filter(c=>c.work===service);
+  if(!f.length){list.innerHTML="<p>কোনো কন্টাক্ট নেই</p>";return;}
+  f.forEach(c=>{
+    list.innerHTML+=`
+    <div class="card">
       <h3>${c.name}</h3>
-      <p>কাজ: ${c.work}</p>
-      <p>এলাকা: ${c.area}</p>
-      <a class="call" href="${c.phone.includes('@')?'mailto:':'tel:'}${c.phone}">
-        ${c.phone.includes('@')?'📧 ইমেইল করুন':'📞 কল করুন'}
-      </a>
+      <p>${c.area}</p>
+      <a class="call" href="tel:${c.phone}">📞 কল করুন</a>
     </div>`;
   });
 }
 
-/* Search */
-function searchContact(){
-  let q = searchInput.value.toLowerCase();
-  document.querySelectorAll(".contact").forEach(c=>{
-    c.style.display = c.innerText.toLowerCase().includes(q) ? "" : "none";
-  });
-}
-
-/* Service Select */
-function selectService(service){
-  localStorage.setItem("selectedService", service);
-  showServicePage(service);
-      }
-      function showServicePage(service){
-  // সব section লুকাও
-  ["home","add","admin","servicePage"].forEach(id=>{
-    const el = document.getElementById(id);
-    if(el) el.style.display="none";
-  });
-
-  document.getElementById("servicePage").style.display="block";
-  document.getElementById("serviceTitle").innerText = service + " কন্টাক্ট";
-
-  let all = JSON.parse(localStorage.getItem("contacts") || "[]");
-  let list = document.getElementById("serviceContactList");
-  list.innerHTML = "";
-
-  let filtered = all.filter(c => c.work === service);
-
-  if(filtered.length === 0){
-    list.innerHTML = "<p>এই সার্ভিসে এখনো কোনো কন্টাক্ট নেই</p>";
-    return;
-  }
-
-  filtered.forEach(c=>{
-    list.innerHTML += `
-      <div class="card">
-        <h3>${c.name}</h3>
-        <p>কাজ: ${c.work}</p>
-        <p>এলাকা: ${c.area}</p>
-        <a class="call" href="${c.phone.includes('@')?'mailto:':'tel:'}${c.phone}">
-          ${c.phone.includes('@')?'📧 ইমেইল করুন':'📞 কল করুন'}
-        </a>
-      </div>
-    `;
-  });
-      }
-      
-
 /* Init */
-function go(id){
-  ["home","add","admin","servicePage"].forEach(s=>{
-    const el = document.getElementById(s);
-    if(el) el.style.display="none";
-  });
-
-  document.getElementById(id).style.display="block";
-      }
-    </script>
+if(isAdmin){
+  document.querySelectorAll(".admin-only").forEach(e=>e.style.display="block");
+}
+go("home");
+</script>
 
 </body>
-</html>
+  </html>
