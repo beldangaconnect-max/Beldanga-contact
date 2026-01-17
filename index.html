@@ -59,67 +59,65 @@ section{padding:14px;}
   <p class="sub-title">Trusted Local Services of Beldanga</p>        
   <div id="pageIndicator">🏠 Home</div>        
 </header>        
-        
-<!-- LOGIN -->        
-        <section id="admin" style="display:none;">
-  <h3>🛡️ Admin Approval Panel</h3>
-  <div id="pendingList"></div>
-        </section>
+<!-- LOGIN -->
 <section id="login" style="padding-top:40px;">
-<div id="loginBox" style="
-  background:#fff;
-  max-width:360px;
-  margin:0 auto;
-  padding:20px;
-  border-radius:16px;
-  box-shadow:0 8px 20px rgba(0,0,0,.15);
-  text-align:center;
-">
-        
-    <h3 style="margin:0 0 6px;">লগইন করুন</h3>        
-    <p style="font-size:13px;opacity:.8;margin-bottom:16px;">        
-      নিজের সার্ভিস যোগ ও এডিট করতে লগইন করুন        
-    </p>        
-        
-    <label style="font-size:13px;display:block;text-align:left;margin-bottom:4px;">        
-      মোবাইল নম্বর / ইমেইল        
-    </label>        
-    <input        
-      id="userId"        
-      type="text"        
-      placeholder="যেমন: 9XXXXXXXXX"        
-      style="        
-        width:100%;        
-        padding:12px;        
-        border-radius:10px;        
-        border:1px solid #ccc;        
-        margin-bottom:14px;        
-      "        
-    >        
-        
-    <button        
-      onclick="login()"        
-      style="        
-        width:100%;        
-        padding:12px;        
-        border-radius:12px;        
-        background:#1976d2;        
-        color:#fff;        
-        border:none;        
-        font-weight:bold;        
-        font-size:15px;        
-      "        
-    >        
-      🔐 OTP দিয়ে লগইন করুন        
-    </button>        
-        
-    <p style="font-size:12px;margin-top:12px;opacity:.7;">        
-      🔒 আপনার তথ্য সম্পূর্ণ নিরাপদ        
-    </p>        
-        
-  </div>        
-</section>        
-        
+  <div id="loginBox" style="
+    background:#fff;
+    max-width:360px;
+    margin:0 auto;
+    padding:20px;
+    border-radius:16px;
+    box-shadow:0 8px 20px rgba(0,0,0,.15);
+    text-align:center;
+  ">
+
+    <h3 style="margin:0 0 6px;">লগইন করুন</h3>
+
+    <p style="font-size:13px;opacity:.8;margin-bottom:16px;">
+      নিজের সার্ভিস যোগ ও এডিট করতে লগইন করুন
+    </p>
+
+    <label style="font-size:13px;display:block;text-align:left;margin-bottom:4px;">
+      মোবাইল নম্বর / ইমেইল
+    </label>
+
+    <input
+      id="userId"
+      type="text"
+      placeholder="যেমন: 9XXXXXXXXX"
+      style="
+        width:100%;
+        padding:12px;
+        border-radius:10px;
+        border:1px solid #ccc;
+        margin-bottom:14px;
+      "
+    >
+
+    <!-- ✅ LOGIN BUTTON (এইটাই সবচেয়ে গুরুত্বপূর্ণ) -->
+    <button
+      onclick="login()"
+      style="
+        width:100%;
+        padding:12px;
+        border-radius:12px;
+        background:#1976d2;
+        color:#fff;
+        border:none;
+        font-weight:bold;
+        font-size:15px;
+      "
+    >
+      🔐 OTP দিয়ে লগইন করুন
+    </button>
+
+    <p style="font-size:12px;margin-top:12px;opacity:.7;">
+      🔒 আপনার তথ্য সম্পূর্ণ নিরাপদ
+    </p>
+
+  </div>
+</section>
+
 <!-- HOME -->        
 <section id="home" style="display:none;">        
   <div class="service" onclick="openService('ফার্নিচার মেকার')">🪑 ফার্নিচার মেকার</div>        
@@ -131,8 +129,7 @@ section{padding:14px;}
   <div class="service" onclick="openService('অ্যালুমিনিয়াম ফ্যাব্রিকেশন')">🚪 অ্যালুমিনিয়াম ফ্যাব্রিকেশন</div>        
   <div class="service" onclick="openService('ক্লিনার')">🧹 ক্লিনার</div>        
   <div class="service" onclick="openService('মোবাইল রিপেয়ার')">🛠️ মোবাইল রিপেয়ার</div>        
-  <div class="service" onclick="openService('টেইলার')">🧵 টেইলার</div>        
-        
+  <div class="service" onclick="openService('টেইলার')">🧵 টেইলার</div>            
   <div class="service" onclick="openService('হাউস কিপার')">🏠 হাউস কিপার</div>        
   <div class="service" onclick="openService('রাঁধুনি')">🍳 রাঁধুনি</div>        
   <div class="service" onclick="openService('টেম্পো / পিকআপ ভ্যান')">🚚 টেম্পো / পিকআপ ভ্যান</div>        
@@ -143,15 +140,13 @@ section{padding:14px;}
   <div class="service" onclick="openService('হোম নার্স')">🧑‍⚕️ হোম নার্স</div>        
   <div class="service" onclick="openService('ইনভার্টার / ব্যাটারি সার্ভিস')">🔋 ইনভার্টার / ব্যাটারি সার্ভিস</div>        
   <div class="service" onclick="openService('মুদিখানা হোম ডেলিভারি')">🛒 মুদিখানা হোম ডেলিভারি</div>        
-  </section>        
+  </section>      
         
 <!-- SERVICE PAGE -->        
 <section id="servicePage" style="display:none;">        
-  <h3 id="serviceTitle"></h3>        
-        
-  <button class="inline-add-btn" onclick="toggleAddForm()">➕ নিজেকে যোগ করুন</button>        
-        
-  <div id="inlineAddForm" style="display:none;">        
+<h3 id="serviceTitle"></h3>        
+<button class="inline-add-btn" onclick="toggleAddForm()">➕ নিজেকে যোগ করুন</button>        
+<div id="inlineAddForm" style="display:none;">        
     <input id="name" placeholder="নাম">        
     <input id="area" placeholder="এলাকা">        
     <input id="phone" placeholder="মোবাইল">        
@@ -213,8 +208,7 @@ function go(id){
     id==="servicePage"?currentService:
     id==="admin"?"🛡️ Admin":"";
         }
-        
-/* Login */
+        /* Login */
 function login(){
   const u = userId.value.trim();
 
@@ -226,10 +220,12 @@ function login(){
   currentUser = u;
   localStorage.setItem("currentUser", u);
 
-  document.getElementById("login").style.display = "none";
-  document.getElementById("userProfile").style.display = "block";
+  // সব পেজ hide
+  go("userProfile");
+
   document.getElementById("profileUserId").innerText = u;
 
+  // Admin হলে admin panel
   if(u === ADMIN_ID){
     go("admin");
     loadPending();
@@ -237,7 +233,7 @@ function login(){
 
   alert("OTP Verified ✅");
   userId.value = "";
-        }
+}
         
 /* Logout */        
 function logout(){        
