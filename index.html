@@ -7,132 +7,48 @@
 
 <style>
 *{box-sizing:border-box;}
-body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#f4f6f8;
-  padding-bottom:70px;
-}
-header{
-  background:#1976d2;
-  color:#fff;
-  padding:16px;
-  text-align:center;
-}
+body{margin:0;font-family:Arial,sans-serif;background:#f4f6f8;padding-bottom:70px;}
+header{background:#1976d2;color:#fff;padding:16px;text-align:center;}
+.main-title{margin:0;font-size:22px;font-weight:700;}
+.sub-title{margin:4px 0;font-size:13px;opacity:.9;}
+#pageIndicator{margin-top:6px;font-size:12px;background:rgba(255,255,255,.2);display:inline-block;padding:4px 12px;border-radius:20px;}
+
 section{padding:14px;}
-.service{
-  background:#fff;
-  padding:14px;
-  margin:10px 0;
-  border-radius:14px;
-  font-weight:700;
-  box-shadow:0 4px 12px rgba(0,0,0,.12);
-  cursor:pointer;
-}
-.card{
-  background:#fff;
-  padding:16px;
-  margin:12px 0;
-  border-radius:16px;
-  box-shadow:0 6px 16px rgba(0,0,0,.15);
-}
-.call{
-  display:block;
-  margin-top:12px;
-  padding:14px;
-  background:#2e7d32;
-  color:#fff;
-  text-align:center;
-  border-radius:12px;
-  text-decoration:none;
-  font-weight:bold;
-}
-#addForm input,#addForm button{
-  width:100%;
-  padding:12px;
-  margin-bottom:10px;
-  border-radius:8px;
-}
-#addForm button{
-  background:#1976d2;
-  color:#fff;
-  border:none;
-  font-weight:bold;
-}
-.admin-only{display:none;}
-#bottomNav{
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  height:60px;
-  background:#fff;
-  display:flex;
-  border-top:1px solid #ccc;
-}
-#bottomNav button{
-  flex:1;
-  border:none;
-  background:none;
-  font-weight:bold;
-}
-  .main-title{
-  margin:0;
-  font-size:22px;
-  font-weight:700;
-}
+.service{background:#fff;padding:14px;margin:10px 0;border-radius:14px;font-weight:700;box-shadow:0 4px 12px rgba(0,0,0,.12);cursor:pointer;}
+.card{background:#fff;padding:16px;margin:12px 0;border-radius:16px;box-shadow:0 6px 16px rgba(0,0,0,.15);position:relative;}
+.edit-btn{position:absolute;top:12px;right:12px;cursor:pointer;opacity:.6;}
+.edit-btn:hover{opacity:1;}
+.call{display:block;margin-top:12px;padding:14px;background:#2e7d32;color:#fff;text-align:center;border-radius:12px;text-decoration:none;font-weight:bold;}
 
-.sub-title{
-  margin:4px 0 6px;
-  font-size:13px;
-  opacity:0.9;
-}
+#addForm input,#addForm button{width:100%;padding:12px;margin-bottom:10px;border-radius:8px;}
+#addForm button{background:#1976d2;color:#fff;border:none;font-weight:bold;}
 
-#pageIndicator{
-  font-size:12px;
-  background:rgba(255,255,255,0.2);
-  display:inline-block;
-  padding:4px 10px;
-  border-radius:20px;
-}
-#bottomNav button.active{color:#1976d2;}
-  /* Edit button */
-.card{
-  position: relative;
-}
-
-.edit-btn{
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  font-size: 16px;
-  cursor: pointer;
-  opacity: 0.6;
-}
-
-.edit-btn:hover{
-  opacity: 1;
-  }
+#bottomNav{position:fixed;bottom:0;left:0;right:0;height:60px;background:#fff;display:flex;border-top:1px solid #ccc;}
+#bottomNav button{flex:1;border:none;background:none;font-weight:bold;}
 </style>
 </head>
 
 <body>
+
 <header>
   <h1 class="main-title">Beldanga Contact Database</h1>
   <p class="sub-title">Trusted Local Services of Beldanga</p>
+  <div id="pageIndicator">🏠 Home</div>
 </header>
-  
+
+<!-- LOGIN -->
+<section id="login">
+  <input id="userId" placeholder="মোবাইল / ইমেইল">
+  <button onclick="login()">Login (OTP)</button>
+</section>
+
 <!-- HOME -->
-<section id="home">
+<section id="home" style="display:none;">
   <div class="service" onclick="openService('ফার্নিচার মেকার')">🪑 ফার্নিচার মেকার</div>
   <div class="service" onclick="openService('পেইন্টার')">🎨 পেইন্টার</div>
   <div class="service" onclick="openService('ইলেকট্রিশিয়ান')">💡 ইলেকট্রিশিয়ান</div>
   <div class="service" onclick="openService('রাজমিস্ত্রি')">🧱 রাজমিস্ত্রি</div>
   <div class="service" onclick="openService('প্লাম্বার')">🚰 প্লাম্বার</div>
-  <div class="service" onclick="openService('গ্লাস ফিটার')">🪟 গ্লাস ফিটার</div>
-  <div class="service" onclick="openService('অ্যালুমিনিয়াম ফ্যাব্রিকেশন')">🚪 অ্যালুমিনিয়াম ফ্যাব্রিকেশন</div>
-  <div class="service" onclick="openService('ক্লিনার')">🧹 ক্লিনার</div>
-  <div class="service" onclick="openService('মোবাইল রিপেয়ার')">🛠️ মোবাইল রিপেয়ার</div>
   <div class="service" onclick="openService('টেইলার')">🧵 টেইলার</div>
 </section>
 
@@ -143,103 +59,65 @@ section{padding:14px;}
 </section>
 
 <!-- ADD -->
-<section id="add" class="admin-only">
+<section id="add" style="display:none;">
   <form id="addForm" onsubmit="addContact();return false;">
     <input id="name" placeholder="নাম">
     <input id="work" placeholder="কাজ">
     <input id="area" placeholder="এলাকা">
     <input id="phone" placeholder="মোবাইল">
-    <button type="submit">Add Contact</button>
+    <button type="submit">Add / Update Contact</button>
   </form>
-</section>
-
-<!-- ADMIN -->
-<section id="admin">
-  <input id="adminPass" type="password" placeholder="Admin Password">
-  <button onclick="adminLogin()">Login</button>
-  <button onclick="adminLogout()" class="admin-only">Logout</button>
 </section>
 
 <!-- Bottom Nav -->
 <div id="bottomNav">
   <button onclick="go('home')">🏠 Home</button>
-  <button onclick="safeAdd()">➕ Add</button>
-  <button onclick="go('admin')">🔐 Admin</button>
+  <button onclick="go('add')">➕ Add</button>
+  <button onclick="logout()">🚪 Logout</button>
 </div>
 
 <script>
-const ADMIN_PASSWORD="5234";
-let isAdmin = localStorage.getItem("isAdmin")==="true";
+let currentUser = localStorage.getItem("currentUser");
 
 /* Navigation */
 function go(id){
-  ["home","add","admin","servicePage"].forEach(s=>{
+  ["login","home","add","servicePage"].forEach(s=>{
     const el=document.getElementById(s);
     if(el) el.style.display="none";
   });
   document.getElementById(id).style.display="block";
 }
 
-/* Admin */
-function adminLogin(){
-  if(adminPass.value.trim()===ADMIN_PASSWORD){
-    isAdmin=true;
-    localStorage.setItem("isAdmin","true");
-    document.querySelectorAll(".admin-only").forEach(e=>e.style.display="block");
-    go("home");
-    alert("Admin Login Successful");
-  }else alert("Wrong password");
-}
-function adminLogout(){
-  isAdmin=false;
-  localStorage.removeItem("isAdmin");
-  document.querySelectorAll(".admin-only").forEach(e=>e.style.display="none");
+/* Login (OTP demo) */
+function login(){
+  const u=document.getElementById("userId").value.trim();
+  if(!u){alert("মোবাইল বা ইমেইল দিন");return;}
+  currentUser=u;
+  localStorage.setItem("currentUser",u);
+  alert("OTP Verified ✅");
   go("home");
 }
 
-/* Safe Add */
-function safeAdd(){
-  if(!isAdmin){alert("Admin login প্রয়োজন");go("admin");return;}
-  go("add");
+/* Logout */
+function logout(){
+  localStorage.removeItem("currentUser");
+  currentUser=null;
+  go("login");
 }
 
-/* Add Contact (FIXED) */
+/* Add Contact */
 function addContact(){
-  const nameEl=document.getElementById("name");
-  const workEl=document.getElementById("work");
-  const areaEl=document.getElementById("area");
-  const phoneEl=document.getElementById("phone");
+  if(!currentUser){alert("Login করুন");return;}
 
-  if(
-    nameEl.value.trim()==="" ||
-    workEl.value.trim()==="" ||
-    phoneEl.value.trim()===""
-  ){
-    alert("সব ঘর পূরণ করুন");
-    return;
-  }
+  const n=name.value.trim(),w=work.value.trim(),a=area.value.trim(),p=phone.value.trim();
+  if(!n||!w||!p){alert("সব ঘর পূরণ করুন");return;}
 
   let data=JSON.parse(localStorage.getItem("contacts")||"[]");
-
-  data.push({
-    name:nameEl.value.trim(),
-    work:workEl.value.trim(),
-    area:areaEl.value.trim(),
-    phone:phoneEl.value.trim()
-  });
-
+  data.push({name:n,work:w,area:a,phone:p,owner:currentUser});
   localStorage.setItem("contacts",JSON.stringify(data));
 
-  nameEl.value="";
-  workEl.value="";
-  areaEl.value="";
-  phoneEl.value="";
-  
-function setIndicator(text){
-  document.getElementById("pageIndicator").innerText = text;
-  }
-
-  alert("কন্টাক্ট যোগ হয়েছে ✅");
+  name.value=work.value=area.value=phone.value="";
+  alert("Contact added ✅");
   go("home");
 }
 
@@ -247,63 +125,39 @@ function setIndicator(text){
 function openService(service){
   go("servicePage");
   document.getElementById("serviceTitle").innerText=service+" কন্টাক্ট";
+
   let all=JSON.parse(localStorage.getItem("contacts")||"[]");
   let list=document.getElementById("serviceContactList");
   list.innerHTML="";
+
   let f=all.filter(c=>c.work===service);
+  if(!f.length){list.innerHTML="<p>কোনো কন্টাক্ট নেই</p>";return;}
 
-  if(!f.length){
-    list.innerHTML="<p>এই সার্ভিসে কোনো কন্টাক্ট নেই</p>";
-    return;
-  }
-
-  f.forEach((c,index)=>{
-  list.innerHTML+=`
+  f.forEach((c,i)=>{
+    list.innerHTML+=`
     <div class="card">
-      ${isAdmin ? `<span class="edit-btn" onclick="editContact(${index},'${service}')">✏️</span>` : ``}
+      ${c.owner===currentUser?`<span class="edit-btn" onclick="editContact(${i},'${service}')">✏️</span>`:""}
       <h3>${c.name}</h3>
       <p>${c.area}</p>
       <a class="call" href="tel:${c.phone}">📞 কল করুন</a>
-    </div>
-  `;
-});
+    </div>`;
+  });
+}
+
+/* Edit */
+function editContact(index,service){
+  let all=JSON.parse(localStorage.getItem("contacts")||"[]");
+  let f=all.filter(c=>c.work===service && c.owner===currentUser);
+  let c=f[index];
+
+  name.value=c.name; work.value=c.work; area.value=c.area; phone.value=c.phone;
+  all.splice(all.indexOf(c),1);
+  localStorage.setItem("contacts",JSON.stringify(all));
+  go("add");
 }
 
 /* Init */
-if(isAdmin){
-  document.querySelectorAll(".admin-only").forEach(e=>e.style.display="block");
-}
-go("home");
-  if(id==="home") setIndicator("🏠 Home");
-if(id==="add") setIndicator("➕ Add Contact");
-if(id==="admin") setIndicator("🔐 Admin Panel");
-  function editContact(index, service){
-  if(!isAdmin){
-    alert("Admin login প্রয়োজন");
-    return;
-  }
-
-  let all = JSON.parse(localStorage.getItem("contacts") || "[]");
-  let filtered = all.filter(c => c.work === service);
-  let contact = filtered[index];
-
-  // form-এ ডাটা বসানো
-  document.getElementById("name").value = contact.name;
-  document.getElementById("work").value = contact.work;
-  document.getElementById("area").value = contact.area;
-  document.getElementById("phone").value = contact.phone;
-
-  // পুরনো কন্টাক্ট মুছে ফেলা (update-এর জন্য)
-  let realIndex = all.findIndex(c =>
-    c.name===contact.name &&
-    c.phone===contact.phone &&
-    c.work===contact.work
-  );
-  all.splice(realIndex,1);
-  localStorage.setItem("contacts",JSON.stringify(all));
-
-  go("add");
-  }
+currentUser?go("home"):go("login");
 </script>
 
 </body>
