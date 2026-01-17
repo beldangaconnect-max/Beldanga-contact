@@ -96,6 +96,23 @@ section{padding:14px;}
   border-radius:20px;
 }
 #bottomNav button.active{color:#1976d2;}
+  /* Edit button */
+.card{
+  position: relative;
+}
+
+.edit-btn{
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  font-size: 16px;
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+.edit-btn:hover{
+  opacity: 1;
+  }
 </style>
 </head>
 
@@ -240,14 +257,16 @@ function openService(service){
     return;
   }
 
-  f.forEach(c=>{
-    list.innerHTML+=`
+  f.forEach((c,index)=>{
+  list.innerHTML+=`
     <div class="card">
+      ${isAdmin ? `<span class="edit-btn" onclick="editContact(${index},'${service}')">✏️</span>` : ``}
       <h3>${c.name}</h3>
       <p>${c.area}</p>
       <a class="call" href="tel:${c.phone}">📞 কল করুন</a>
-    </div>`;
-  });
+    </div>
+  `;
+});
 }
 
 /* Init */
@@ -258,6 +277,33 @@ go("home");
   if(id==="home") setIndicator("🏠 Home");
 if(id==="add") setIndicator("➕ Add Contact");
 if(id==="admin") setIndicator("🔐 Admin Panel");
+  function editContact(index, service){
+  if(!isAdmin){
+    alert("Admin login প্রয়োজন");
+    return;
+  }
+
+  let all = JSON.parse(localStorage.getItem("contacts") || "[]");
+  let filtered = all.filter(c => c.work === service);
+  let contact = filtered[index];
+
+  // form-এ ডাটা বসানো
+  document.getElementById("name").value = contact.name;
+  document.getElementById("work").value = contact.work;
+  document.getElementById("area").value = contact.area;
+  document.getElementById("phone").value = contact.phone;
+
+  // পুরনো কন্টাক্ট মুছে ফেলা (update-এর জন্য)
+  let realIndex = all.findIndex(c =>
+    c.name===contact.name &&
+    c.phone===contact.phone &&
+    c.work===contact.work
+  );
+  all.splice(realIndex,1);
+  localStorage.setItem("contacts",JSON.stringify(all));
+
+  go("add");
+  }
 </script>
 
 </body>
