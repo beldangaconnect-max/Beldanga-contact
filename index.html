@@ -68,7 +68,6 @@ section{padding:14px;}
 
 <!-- HOME -->
 <section id="home" style="display:none;">
-  <div id="serviceContactList"></div>
   <div class="service" onclick="openService('ফার্নিচার মেকার')">🪑 ফার্নিচার মেকার</div>
   <div class="service" onclick="openService('পেইন্টার')">🎨 পেইন্টার</div>
   <div class="service" onclick="openService('ইলেকট্রিশিয়ান')">💡 ইলেকট্রিশিয়ান</div>
@@ -164,28 +163,41 @@ function toggleAddForm(){
 
 /* Add self */
 function addSelf(){
-  if(!currentUser){alert("Login করুন");return;}
-
-  if(!name.value.trim()||!phone.value.trim()){
-    alert("সব ঘর পূরণ করুন");return;
+  if(!currentUser){
+    alert("Login করুন");
+    return;
   }
 
-  let data = JSON.parse(localStorage.getItem("contacts")||"[]");
+  const nameEl = document.getElementById("name");
+  const areaEl = document.getElementById("area");
+  const phoneEl = document.getElementById("phone");
+
+  if(!nameEl.value.trim() || !phoneEl.value.trim()){
+    alert("সব ঘর পূরণ করুন");
+    return;
+  }
+
+  let data = JSON.parse(localStorage.getItem("contacts") || "[]");
 
   data.push({
-    name:name.value.trim(),
-    work:currentService,
-    area:area.value.trim(),
-    phone:phone.value.trim(),
-    owner:currentUser
+    name: nameEl.value.trim(),
+    work: currentService,
+    area: areaEl.value.trim(),
+    phone: phoneEl.value.trim(),
+    owner: currentUser
   });
 
-  localStorage.setItem("contacts",JSON.stringify(data));
-  name.value=area.value=phone.value="";
-  inlineAddForm.style.display="none";
-  loadServiceContacts();
-}
+  localStorage.setItem("contacts", JSON.stringify(data));
 
+  nameEl.value = "";
+  areaEl.value = "";
+  phoneEl.value = "";
+
+  inlineAddForm.style.display = "none";
+
+  // ⭐ এই লাইনটাই সবচেয়ে গুরুত্বপূর্ণ
+  loadServiceContacts();
+  }
 /* Load service contacts */
 function loadServiceContacts(){
   let list = document.getElementById("serviceContactList");
