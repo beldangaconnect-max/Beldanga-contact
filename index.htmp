@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beldanga Contact Database</title>
+
+<style>
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#f4f6f8;
+  padding-bottom:70px;
+}
+
+/* Header */
+header{
+  background:#1976d2;
+  color:#fff;
+  padding:16px;
+  text-align:center;
+}
+
+/* Section */
+section{padding:14px;}
+
+/* Search */
+#searchInput{
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid #ccc;
+  margin-bottom:10px;
+}
+
+/* Service Card */
+.service{
+  background:#fff;
+  padding:14px;
+  margin:10px 0;
+  border-radius:14px;
+  font-weight:700;
+  box-shadow:0 4px 12px rgba(0,0,0,.12);
+  cursor:pointer;
+}
+
+/* Contact Card */
+.card{
+  background:#fff;
+  padding:16px;
+  margin:12px 0;
+  border-radius:16px;
+  box-shadow:0 6px 16px rgba(0,0,0,.15);
+}
+
+/* Call / Email Button */
+.call{
+  display:block;
+  margin-top:12px;
+  padding:14px;
+  background:#2e7d32;
+  color:#fff;
+  text-align:center;
+  border-radius:12px;
+  text-decoration:none;
+  font-weight:bold;
+}
+
+/* Admin actions */
+.admin-actions button{
+  margin-top:10px;
+  margin-right:6px;
+  padding:8px 12px;
+  border-radius:6px;
+  border:1px solid #ccc;
+  background:#fff;
+}
+
+/* Add Form */
+#addForm{
+  background:#fff;
+  padding:16px;
+  border-radius:16px;
+}
+#addForm input{
+  width:100%;
+  padding:12px;
+  margin-bottom:10px;
+  border-radius:8px;
+  border:1px solid #ccc;
+}
+#addForm button{
+  width:100%;
+  padding:14px;
+  background:#1976d2;
+  color:white;
+  border:none;
+  border-radius:12px;
+  font-weight:bold;
+}
+
+/* Admin only */
+.admin-only{display:none;}
+
+/* Bottom Navigation */
+#bottomNav{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  height:60px;
+  background:#fff;
+  display:flex;
+  border-top:1px solid #ccc;
+}
+#bottomNav button{
+  flex:1;
+  border:none;
+  background:none;
+  font-size:14px;
+  font-weight:bold;
+}
+#bottomNav button.active{
+  color:#1976d2;
+}
+
+/* Footer */
+footer{
+  background:#1976d2;
+  color:white;
+  text-align:center;
+  padding:10px;
+  font-size:12px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h2>Beldanga Contact Database</h2>
+  <p>বেলডাঙার প্রয়োজনীয় লোকাল কন্টাক্ট</p>
+</header>
+
+<!-- HOME -->
+<section id="home">
+  <input id="searchInput" placeholder="🔍 নাম বা কাজ লিখুন" onkeyup="searchContact()">
+
+  <div class="service" onclick="selectService('ফার্নিচার মেকার')">🪑 ফার্নিচার মেকার</div>
+  <div class="service" onclick="selectService('পেইন্টার')">🎨 পেইন্টার</div>
+  <div class="service" onclick="selectService('ইলেকট্রিশিয়ান')">💡 ইলেকট্রিশিয়ান</div>
+
+  <div id="contactList"></div>
+</section>
+
+<!-- ADD -->
+<section id="add" class="admin-only">
+  <div id="addForm">
+    <h3>➕ নতুন কন্টাক্ট যোগ করুন</h3>
+    <input id="name" placeholder="নাম">
+    <input id="work" placeholder="কাজ">
+    <input id="area" placeholder="এলাকা">
+    <input id="phone" placeholder="মোবাইল / ইমেইল">
+    <button onclick="addContact()">Add Contact</button>
+  </div>
+</section>
+
+<!-- ADMIN -->
+<section id="admin">
+  <input id="adminPass" type="password" placeholder="Admin Password">
+  <button onclick="adminLogin()">Login</button>
+  <button onclick="adminLogout()" class="admin-only">Logout</button>
+</section>
+
+<footer>© 2026 Beldanga Contact Database</footer>
+
+<!-- Bottom Nav -->
+<div id="bottomNav">
+  <button id="navHome" class="active" onclick="go('home')">🏠 Home</button>
+  <button id="navAdd" onclick="go('add')">➕ Add</button>
+  <button id="navAdmin" onclick="go('admin')">🔐 Admin</button>
+</div>
+
+<script>
+const ADMIN_PASSWORD = "5234";
+let isAdmin = false;
+
+/* Navigation */
+function go(id){
+  ["home","add","admin"].forEach(s=>{
+    document.getElementById(s).style.display="none";
+    document.getElementById("nav"+s.charAt(0).toUpperCase()+s.slice(1))
+      .classList.remove("active");
+  });
+  document.getElementById(id).style.display="block";
+  document.getElementById("nav"+id.charAt(0).toUpperCase()+id.slice(1))
+    .classList.add("active");
+}
+
+/* Admin Login */
+function adminLogin(){
+  if(adminPass.value === ADMIN_PASSWORD){
+    isAdmin = true;
+    document.querySelectorAll(".admin-only").forEach(e=>e.style.display="block");
+    go("add");
+    alert("Admin Login Successful");
+  }else{
+    alert("Wrong Password");
+  }
+}
+
+/* Admin Logout */
+function adminLogout(){
+  isAdmin = false;
+  document.querySelectorAll(".admin-only").forEach(e=>e.style.display="none");
+  go("home");
+}
+
+/* Add Contact */
+function addContact(){
+  if(!name.value || !work.value || !phone.value){
+    alert("সব ঘর পূরণ করুন");
+    return;
+  }
+
+  let data = JSON.parse(localStorage.getItem("contacts") || "[]");
+  data.push({
+    name:name.value,
+    work:work.value,
+    area:area.value,
+    phone:phone.value
+  });
+  localStorage.setItem("contacts", JSON.stringify(data));
+
+  name.value = work.value = area.value = phone.value = "";
+  loadContacts();
+  go("home");
+}
+
+/* Load Contacts */
+function loadContacts(){
+  contactList.innerHTML="";
+  let data = JSON.parse(localStorage.getItem("contacts") || "[]");
+  data.forEach(c=>{
+    contactList.innerHTML += `
+    <div class="card contact">
+      <h3>${c.name}</h3>
+      <p>কাজ: ${c.work}</p>
+      <p>এলাকা: ${c.area}</p>
+      <a class="call" href="${c.phone.includes('@')?'mailto:':'tel:'}${c.phone}">
+        ${c.phone.includes('@')?'📧 ইমেইল করুন':'📞 কল করুন'}
+      </a>
+    </div>`;
+  });
+}
+
+/* Search */
+function searchContact(){
+  let q = searchInput.value.toLowerCase();
+  document.querySelectorAll(".contact").forEach(c=>{
+    c.style.display = c.innerText.toLowerCase().includes(q) ? "" : "none";
+  });
+}
+
+/* Service select */
+function selectService(s){
+  work.value = s;
+  go("add");
+}
+
+/* Init */
+go("home");
+loadContacts();
+</script>
+
+</body>
+</html>
