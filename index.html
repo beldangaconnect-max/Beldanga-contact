@@ -12,23 +12,17 @@ header{background:#1976d2;color:#fff;padding:16px;text-align:center;}
 .main-title{margin:0;font-size:22px;font-weight:700;}
 .sub-title{margin:4px 0;font-size:13px;opacity:.9;}
 #pageIndicator{margin-top:6px;font-size:12px;background:rgba(255,255,255,.2);display:inline-block;padding:4px 12px;border-radius:20px;}
-
 section{padding:14px;}
 .service{background:#fff;padding:14px;margin:10px 0;border-radius:14px;font-weight:700;box-shadow:0 4px 12px rgba(0,0,0,.12);cursor:pointer;}
-
 .card{background:#fff;padding:16px;margin:12px 0;border-radius:16px;box-shadow:0 6px 16px rgba(0,0,0,.15);position:relative;}
 .edit-btn{position:absolute;top:12px;right:12px;cursor:pointer;opacity:.6;}
 .edit-btn:hover{opacity:1;}
-
 .call{display:block;margin-top:12px;padding:14px;background:#2e7d32;color:#fff;text-align:center;border-radius:12px;text-decoration:none;font-weight:bold;}
-
 .inline-add-btn{width:100%;padding:12px;border-radius:12px;background:#1976d2;color:#fff;border:none;font-weight:bold;margin-bottom:12px;}
-
-input,button{width:100%;padding:12px;margin-bottom:10px;border-radius:8px;}
-button{background:#1976d2;color:#fff;border:none;font-weight:bold;}
-
+#inlineAddForm input,#inlineAddForm button{width:100%;padding:12px;margin-bottom:10px;border-radius:8px;}
+#inlineAddForm button{background:#1976d2;color:#fff;border:none;font-weight:bold;}
 #bottomNav{position:fixed;bottom:0;left:0;right:0;height:60px;background:#fff;display:flex;border-top:1px solid #ccc;}
-#bottomNav button{flex:1;background:none;color:#000;}
+#bottomNav button{flex:1;border:none;background:none;font-weight:bold;}
 </style>
 </head>
 
@@ -42,19 +36,17 @@ button{background:#1976d2;color:#fff;border:none;font-weight:bold;}
 
 <!-- LOGIN -->
 <section id="login">
-  <div class="card">
+  <div id="loginBox" style="background:#fff;max-width:360px;margin:40px auto;padding:20px;border-radius:16px;box-shadow:0 8px 20px rgba(0,0,0,.15);text-align:center;">
     <h3>লগইন করুন</h3>
-    <input id="userId" placeholder="মোবাইল / ইমেইল">
-    <button onclick="login()">🔐 OTP দিয়ে লগইন</button>
+    <input id="userId" placeholder="মোবাইল / ইমেইল" style="width:100%;padding:12px;border-radius:10px;border:1px solid #ccc;">
+    <button onclick="login()" style="margin-top:12px;width:100%;padding:12px;border-radius:12px;background:#1976d2;color:#fff;border:none;font-weight:bold;">🔐 OTP দিয়ে লগইন</button>
   </div>
-</section>
 
-<!-- PROFILE -->
-<section id="profile" style="display:none;">
-  <div class="card">
+  <!-- PROFILE -->
+  <div id="userProfile" style="display:none;text-align:center;">
     <h3>👤 আপনার প্রোফাইল</h3>
-    <p><strong>ID:</strong> <span id="profileUser"></span></p>
-    <button onclick="go('home')">➡️ সার্ভিস দেখুন</button>
+    <p><strong>ID:</strong> <span id="profileUserId"></span></p>
+    <button onclick="go('home')" style="padding:12px;border-radius:12px;background:#1976d2;color:#fff;border:none;font-weight:bold;">➡️ সার্ভিস দেখুন</button>
   </div>
 </section>
 
@@ -68,9 +60,9 @@ button{background:#1976d2;color:#fff;border:none;font-weight:bold;}
 <!-- SERVICE PAGE -->
 <section id="servicePage" style="display:none;">
   <h3 id="serviceTitle"></h3>
-  <button class="inline-add-btn" onclick="toggleAdd()">➕ নিজেকে যোগ করুন</button>
+  <button class="inline-add-btn" onclick="toggleAddForm()">➕ নিজেকে যোগ করুন</button>
 
-  <div id="addForm" style="display:none;">
+  <div id="inlineAddForm" style="display:none;">
     <input id="name" placeholder="নাম">
     <input id="area" placeholder="এলাকা">
     <input id="phone" placeholder="মোবাইল">
@@ -90,62 +82,50 @@ let currentUser = localStorage.getItem("currentUser");
 let currentService = "";
 
 function go(id){
-  ["login","profile","home","servicePage"].forEach(s=>{
-    document.getElementById(s).style.display="none";
-  });
+  ["login","home","servicePage"].forEach(s=>document.getElementById(s).style.display="none");
   document.getElementById(id).style.display="block";
-  pageIndicator.innerText = id==="home"?"🏠 Home":currentService;
 }
 
 function login(){
-  const u = userId.value.trim();
-  if(!u) return alert("ID দিন");
-  currentUser = u;
+  const u=userId.value.trim();
+  if(!u)return alert("আইডি দিন");
+  currentUser=u;
   localStorage.setItem("currentUser",u);
-  profileUser.innerText = u;
-  go("profile");
+  loginBox.style.display="none";
+  userProfile.style.display="block";
+  profileUserId.innerText=u;
 }
 
 function logout(){
   localStorage.removeItem("currentUser");
-  currentUser=null;
-  go("login");
+  location.reload();
 }
 
 function openService(s){
   currentService=s;
-  serviceTitle.innerText=s+" কন্টাক্ট";
   go("servicePage");
-  loadContacts();
+  serviceTitle.innerText=s+" কন্টাক্ট";
+  loadServiceContacts();
 }
 
-function toggleAdd(){
-  if(!currentUser) return alert("Login করুন");
-  addForm.style.display = addForm.style.display==="none"?"block":"none";
+function toggleAddForm(){
+  inlineAddForm.style.display=inlineAddForm.style.display==="none"?"block":"none";
 }
 
 function addSelf(){
   let data=JSON.parse(localStorage.getItem("contacts")||"[]");
-  data.push({
-    name:name.value,
-    area:area.value,
-    phone:phone.value,
-    work:currentService,
-    owner:currentUser
-  });
+  data.push({name:name.value,area:area.value,phone:phone.value,work:currentService,owner:currentUser});
   localStorage.setItem("contacts",JSON.stringify(data));
-  name.value=area.value=phone.value="";
-  addForm.style.display="none";
-  loadContacts();
+  loadServiceContacts();
 }
 
-function loadContacts(){
+function loadServiceContacts(){
   serviceContactList.innerHTML="";
-  let all=JSON.parse(localStorage.getItem("contacts")||"[]");
-  all.filter(c=>c.work===currentService).forEach(c=>{
+  let all=JSON.parse(localStorage.getItem("contacts")||"[]").filter(c=>c.work===currentService);
+  all.forEach(c=>{
     serviceContactList.innerHTML+=`
     <div class="card">
-      ${c.owner===currentUser?`<span class="edit-btn" onclick="edit('${c.phone}')">✏️</span>`:""}
+      <span class="edit-btn">✏️</span>
       <h3>${c.name}</h3>
       <p>${c.area}</p>
       <a class="call" href="tel:${c.phone}">📞 কল করুন</a>
@@ -153,17 +133,13 @@ function loadContacts(){
   });
 }
 
-function edit(phone){
-  let all=JSON.parse(localStorage.getItem("contacts")||"[]");
-  let c=all.find(x=>x.phone===phone && x.owner===currentUser);
-  if(!c) return;
-  name.value=c.name; area.value=c.area; phone.value=c.phone;
-  all=all.filter(x=>x!==c);
-  localStorage.setItem("contacts",JSON.stringify(all));
-  addForm.style.display="block";
+if(currentUser){
+  loginBox.style.display="none";
+  userProfile.style.display="block";
+  profileUserId.innerText=currentUser;
+}else{
+  go("login");
 }
-
-currentUser ? go("profile") : go("login");
 </script>
 
 </body>
