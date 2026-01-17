@@ -200,36 +200,40 @@ let currentUser = localStorage.getItem("currentUser");
 let currentService = "";        
         
 /* Navigation */        
-function go(id){        
-  ["login","home","servicePage"].forEach(s=>{        
-    const el=document.getElementById(s);        
-    if(el) el.style.display="none";        
-  });        
-  document.getElementById(id).style.display="block";        
-  document.getElementById("pageIndicator").innerText =        
-    id==="home"?"🏠 Home":id==="servicePage"?currentService:"";        
-}        
+function go(id){
+  ["login","home","servicePage","admin","userProfile"].forEach(s=>{
+    const el = document.getElementById(s);
+    if(el) el.style.display = "none";
+  });
+
+  document.getElementById(id).style.display = "block";
+
+  document.getElementById("pageIndicator").innerText =
+    id==="home"?"🏠 Home":
+    id==="servicePage"?currentService:
+    id==="admin"?"🛡️ Admin":"";
+        }
         
 /* Login */
 function login(){
   const u = userId.value.trim();
+
   if(!u){
     alert("মোবাইল বা ইমেইল দিন");
     return;
-  if(u === ADMIN_ID){
-  go("admin");
-  loadPending();
   }
 
   currentUser = u;
   localStorage.setItem("currentUser", u);
 
-  // ✅ Login box hide
   document.getElementById("login").style.display = "none";
-
-  // ✅ Profile show
   document.getElementById("userProfile").style.display = "block";
   document.getElementById("profileUserId").innerText = u;
+
+  if(u === ADMIN_ID){
+    go("admin");
+    loadPending();
+  }
 
   alert("OTP Verified ✅");
   userId.value = "";
@@ -342,57 +346,13 @@ function loadServiceContacts(){
   list.innerHTML = "";        
         
   let all = JSON.parse(localStorage.getItem("contacts") || "[]");        
-  let f = all.filter(c => c.work === currentService);        
-        
+  let f = all.filter(
+  c => c.work === currentService && c.status === "approved"
+);
   if(f.length === 0){        
     list.innerHTML = "<p>এই সার্ভিসে কোনো কন্টাক্ট নেই</p>";        
     return;        
   }    
-      function approve(index){
-  let all = JSON.parse(localStorage.getItem("contacts") || "[]");
-  let pending = all.filter(c => c.status === "pending");
-
-  let target = pending[index];
-  let realIndex = all.findIndex(
-    c => c.phone === target.phone && c.owner === target.owner
-  );
-
-  all[realIndex].status = "approved";
-  localStorage.setItem("contacts", JSON.stringify(all));
-
-  loadPending();
-     function approve(index){
-  let all = JSON.parse(localStorage.getItem("contacts") || "[]");
-  let pending = all.filter(c => c.status === "pending");
-
-  let target = pending[index];
-  let realIndex = all.findIndex(
-    c => c.phone === target.phone && c.owner === target.owner
-  );
-
-  all[realIndex].status = "approved";
-  localStorage.setItem("contacts", JSON.stringify(all));
-
-  loadPending();         
-  function loadPending(){
-  let list = document.getElementById("pendingList");
-  list.innerHTML = "";
-
-  let all = JSON.parse(localStorage.getItem("contacts") || "[]");
-  let pending = all.filter(c => c.status === "pending");
-
-  if(!pending.length){
-    list.innerHTML = "<p>কোনো pending request নেই</p>";
-    return;
-  }
-
-  pending.forEach((c,i)=>{
-    list.innerHTML += `
-      <div class="card">
-        <h4>${c.name} (${c.work})</h4>
-        <p>${c.area} | ${c.phone}</p>
-        <button onclick="approve(${i})">✅ Approve</button>
-      </div>
 `;
 });
 }
@@ -438,6 +398,43 @@ function startEdit(phone){
   localStorage.setItem("contacts",JSON.stringify(all));        
   inlineAddForm.style.display="block";        
 }        
+function loadPending(){
+  let list = document.getElementById("pendingList");
+  list.innerHTML = "";
+
+  let all = JSON.parse(localStorage.getItem("contacts") || "[]");
+  let pending = all.filter(c => c.status === "pending");
+
+  if(!pending.length){
+    list.innerHTML = "<p>কোনো pending request নেই</p>";
+    return;
+  }
+
+  pending.forEach((c,i)=>{
+    list.innerHTML += `
+      <div class="card">
+        <h4>${c.name} (${c.work})</h4>
+        <p>${c.area} | ${c.phone}</p>
+        <button onclick="approve(${i})">✅ Approve</button>
+      </div>
+    `;
+  });
+}
+
+function approve(index){
+  let all = JSON.parse(localStorage.getItem("contacts") || "[]");
+  let pending = all.filter(c => c.status === "pending");
+
+  let target = pending[index];
+  let realIndex = all.findIndex(
+    c => c.phone === target.phone && c.owner === target.owner
+  );
+
+  all[realIndex].status = "approved";
+  localStorage.setItem("contacts", JSON.stringify(all));
+
+  loadPending();
+            }
         
 /* Init */
 if(currentUser){
