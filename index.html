@@ -160,14 +160,14 @@ footer{
 <!-- Bottom Nav -->
 <div id="bottomNav">
   <button id="navHome" class="active" onclick="go('home')">🏠 Home</button>
-  <button id="navAdd" onclick="go('add')">➕ Add</button>
+<button id="navAdd" onclick="goAddSafe()">➕ Add</button>
   <button id="navAdmin" onclick="go('admin')">🔐 Admin</button>
 </div>
 
-<script>
+    <script>
 const ADMIN_PASSWORD = "5234";
 
-/* 🔐 Admin state (saved) */
+/* 🔐 Restore admin state */
 let isAdmin = localStorage.getItem("isAdmin") === "true";
 
 /* Navigation */
@@ -180,6 +180,16 @@ function go(id){
   document.getElementById(id).style.display="block";
   document.getElementById("nav"+id.charAt(0).toUpperCase()+id.slice(1))
     .classList.add("active");
+}
+
+/* Safe Add Navigation */
+function goAddSafe(){
+  if(!isAdmin){
+    alert("Admin Login প্রয়োজন");
+    go("admin");
+    return;
+  }
+  go("add");
 }
 
 /* Admin Login */
@@ -237,10 +247,10 @@ function addContact(){
 
   localStorage.setItem("contacts", JSON.stringify(data));
 
-  name.value = "";
-  work.value = "";
-  area.value = "";
-  phone.value = "";
+  name.value="";
+  work.value="";
+  area.value="";
+  phone.value="";
 
   loadContacts();
   go("home");
@@ -279,7 +289,7 @@ function selectService(s){
     go("admin");
     return;
   }
-  work.value = s;
+  work.value = s.trim();
   go("add");
 }
 
@@ -287,12 +297,12 @@ function selectService(s){
 go("home");
 loadContacts();
 
-/* 🔁 Restore admin session */
+/* Restore admin UI */
 if(isAdmin){
   document.querySelectorAll(".admin-only")
     .forEach(e=>e.style.display="block");
 }
-</script>
+    </script>
 
 </body>
 </html>
