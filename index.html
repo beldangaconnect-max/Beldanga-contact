@@ -15,13 +15,37 @@ header{background:#1976d2;color:#fff;padding:16px;text-align:center;}
 
 section{padding:14px;}
 .service{background:#fff;padding:14px;margin:10px 0;border-radius:14px;font-weight:700;box-shadow:0 4px 12px rgba(0,0,0,.12);cursor:pointer;}
+
 .card{background:#fff;padding:16px;margin:12px 0;border-radius:16px;box-shadow:0 6px 16px rgba(0,0,0,.15);position:relative;}
 .edit-btn{position:absolute;top:12px;right:12px;cursor:pointer;opacity:.6;}
 .edit-btn:hover{opacity:1;}
+
 .call{display:block;margin-top:12px;padding:14px;background:#2e7d32;color:#fff;text-align:center;border-radius:12px;text-decoration:none;font-weight:bold;}
 
-#addForm input,#addForm button{width:100%;padding:12px;margin-bottom:10px;border-radius:8px;}
-#addForm button{background:#1976d2;color:#fff;border:none;font-weight:bold;}
+.inline-add-btn{
+  width:100%;
+  padding:12px;
+  border-radius:12px;
+  background:#1976d2;
+  color:#fff;
+  border:none;
+  font-weight:bold;
+  margin-bottom:12px;
+}
+
+#inlineAddForm input,#inlineAddForm button{
+  width:100%;
+  padding:12px;
+  margin-bottom:10px;
+  border-radius:8px;
+}
+
+#inlineAddForm button{
+  background:#1976d2;
+  color:#fff;
+  border:none;
+  font-weight:bold;
+}
 
 #bottomNav{position:fixed;bottom:0;left:0;right:0;height:60px;background:#fff;display:flex;border-top:1px solid #ccc;}
 #bottomNav button{flex:1;border:none;background:none;font-weight:bold;}
@@ -55,42 +79,43 @@ section{padding:14px;}
 <!-- SERVICE PAGE -->
 <section id="servicePage" style="display:none;">
   <h3 id="serviceTitle"></h3>
-  <div id="serviceContactList"></div>
-</section>
 
-<!-- ADD -->
-<section id="add" style="display:none;">
-  <form id="addForm" onsubmit="addContact();return false;">
+  <button class="inline-add-btn" onclick="toggleAddForm()">➕ নিজেকে যোগ করুন</button>
+
+  <div id="inlineAddForm" style="display:none;">
     <input id="name" placeholder="নাম">
-    <input id="work" placeholder="কাজ">
     <input id="area" placeholder="এলাকা">
     <input id="phone" placeholder="মোবাইল">
-    <button type="submit">Add / Update Contact</button>
-  </form>
+    <button onclick="addSelf()">যোগ করুন</button>
+  </div>
+
+  <div id="serviceContactList"></div>
 </section>
 
 <!-- Bottom Nav -->
 <div id="bottomNav">
   <button onclick="go('home')">🏠 Home</button>
-  <button onclick="go('add')">➕ Add</button>
   <button onclick="logout()">🚪 Logout</button>
 </div>
 
 <script>
 let currentUser = localStorage.getItem("currentUser");
+let currentService = "";
 
 /* Navigation */
 function go(id){
-  ["login","home","add","servicePage"].forEach(s=>{
+  ["login","home","servicePage"].forEach(s=>{
     const el=document.getElementById(s);
     if(el) el.style.display="none";
   });
   document.getElementById(id).style.display="block";
+  document.getElementById("pageIndicator").innerText =
+    id==="home"?"🏠 Home":id==="servicePage"?currentService:"";
 }
 
-/* Login (OTP demo) */
+/* Login */
 function login(){
-  const u=document.getElementById("userId").value.trim();
+  const u=userId.value.trim();
   if(!u){alert("মোবাইল বা ইমেইল দিন");return;}
   currentUser=u;
   localStorage.setItem("currentUser",u);
@@ -105,38 +130,62 @@ function logout(){
   go("login");
 }
 
-/* Add Contact */
-function addContact(){
-  if(!currentUser){alert("Login করুন");return;}
-
-  const n=name.value.trim(),w=work.value.trim(),a=area.value.trim(),p=phone.value.trim();
-  if(!n||!w||!p){alert("সব ঘর পূরণ করুন");return;}
-
-  let data=JSON.parse(localStorage.getItem("contacts")||"[]");
-  data.push({name:n,work:w,area:a,phone:p,owner:currentUser});
-  localStorage.setItem("contacts",JSON.stringify(data));
-
-  name.value=work.value=area.value=phone.value="";
-  alert("Contact added ✅");
-  go("home");
+/* Service Open */
+function openService(service){
+  currentService = service;
+  go("servicePage");
+  serviceTitle.innerText = service+" কন্টাক্ট";
+  inlineAddForm.style.display="none";
+  loadServiceContacts();
 }
 
-/* Service Page */
-function openService(service){
-  go("servicePage");
-  document.getElementById("serviceTitle").innerText=service+" কন্টাক্ট";
+/* Toggle inline add */
+function toggleAddForm(){
+  if(!currentUser){alert("Login করুন");return;}
+  inlineAddForm.style.display =
+    inlineAddForm.style.display==="none"?"block":"none";
+}
 
-  let all=JSON.parse(localStorage.getItem("contacts")||"[]");
-  let list=document.getElementById("serviceContactList");
+/* Add self */
+function addSelf(){
+  if(!currentUser){alert("Login করুন");return;}
+
+  if(!name.value.trim()||!phone.value.trim()){
+    alert("সব ঘর পূরণ করুন");return;
+  }
+
+  let data = JSON.parse(localStorage.getItem("contacts")||"[]");
+
+  data.push({
+    name:name.value.trim(),
+    work:currentService,
+    area:area.value.trim(),
+    phone:phone.value.trim(),
+    owner:currentUser
+  });
+
+  localStorage.setItem("contacts",JSON.stringify(data));
+  name.value=area.value=phone.value="";
+  inlineAddForm.style.display="none";
+  loadServiceContacts();
+}
+
+/* Load service contacts */
+function loadServiceContacts(){
+  let list=serviceContactList;
   list.innerHTML="";
+  let all=JSON.parse(localStorage.getItem("contacts")||"[]");
+  let f=all.filter(c=>c.work===currentService);
 
-  let f=all.filter(c=>c.work===service);
-  if(!f.length){list.innerHTML="<p>কোনো কন্টাক্ট নেই</p>";return;}
+  if(!f.length){
+    list.innerHTML="<p>এই সার্ভিসে কোনো কন্টাক্ট নেই</p>";
+    return;
+  }
 
-  f.forEach((c,i)=>{
+  f.forEach(c=>{
     list.innerHTML+=`
     <div class="card">
-      ${c.owner===currentUser?`<span class="edit-btn" onclick="editContact(${i},'${service}')">✏️</span>`:""}
+      ${c.owner===currentUser?`<span class="edit-btn" onclick="startEdit('${c.phone}')">✏️</span>`:""}
       <h3>${c.name}</h3>
       <p>${c.area}</p>
       <a class="call" href="tel:${c.phone}">📞 কল করুন</a>
@@ -145,15 +194,18 @@ function openService(service){
 }
 
 /* Edit */
-function editContact(index,service){
+function startEdit(phone){
   let all=JSON.parse(localStorage.getItem("contacts")||"[]");
-  let f=all.filter(c=>c.work===service && c.owner===currentUser);
-  let c=f[index];
+  let c=all.find(x=>x.phone===phone && x.owner===currentUser);
+  if(!c)return;
 
-  name.value=c.name; work.value=c.work; area.value=c.area; phone.value=c.phone;
-  all.splice(all.indexOf(c),1);
+  name.value=c.name;
+  area.value=c.area;
+  phone.value=c.phone;
+
+  all = all.filter(x=>!(x.phone===phone && x.owner===currentUser));
   localStorage.setItem("contacts",JSON.stringify(all));
-  go("add");
+  inlineAddForm.style.display="block";
 }
 
 /* Init */
