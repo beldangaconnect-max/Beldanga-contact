@@ -102,7 +102,7 @@ section{padding:14px;}
     <input id="name" placeholder="নাম">
     <input id="area" placeholder="এলাকা">
     <input id="phone" placeholder="মোবাইল">
-    <button onclick="addSelf()">যোগ করুন</button>
+<button type="button" onclick="addSelf()">যোগ করুন</button>
   </div>
 
   <div id="serviceContactList"></div>
@@ -202,8 +202,8 @@ function loadServiceContacts(){
   f.forEach(c=>{
     list.innerHTML += `
       <div class="card">
-        ${c.owner === currentUser ? 
-          `<span class="edit-btn" onclick="startEdit('${c.phone}')">✏️</span>` 
+        ${c.owner === currentUser
+          ? `<span class="edit-btn" onclick="startEdit('${c.phone}')">✏️</span>`
           : ""
         }
         <h3>${c.name}</h3>
