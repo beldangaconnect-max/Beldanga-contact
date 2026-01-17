@@ -76,17 +76,36 @@ section{padding:14px;}
   background:none;
   font-weight:bold;
 }
+  .main-title{
+  margin:0;
+  font-size:22px;
+  font-weight:700;
+}
+
+.sub-title{
+  margin:4px 0 6px;
+  font-size:13px;
+  opacity:0.9;
+}
+
+#pageIndicator{
+  font-size:12px;
+  background:rgba(255,255,255,0.2);
+  display:inline-block;
+  padding:4px 10px;
+  border-radius:20px;
+}
 #bottomNav button.active{color:#1976d2;}
 </style>
 </head>
 
 <body>
-
 <header>
-  <h2>Beldanga Contact Database</h2>
-  <p>বেলডাঙার প্রয়োজনীয় লোকাল কন্টাক্ট</p>
+  <h1 class="main-title">Beldanga Contact Database</h1>
+  <p class="sub-title">Trusted Local Services of Beldanga</p>
+  <div id="pageIndicator">🏠 Home</div>
 </header>
-
+  
 <!-- HOME -->
 <section id="home">
   <div class="service" onclick="openService('ফার্নিচার মেকার')">🪑 ফার্নিচার মেকার</div>
@@ -199,6 +218,10 @@ function addContact(){
   workEl.value="";
   areaEl.value="";
   phoneEl.value="";
+  
+function setIndicator(text){
+  document.getElementById("pageIndicator").innerText = text;
+  }
 
   alert("কন্টাক্ট যোগ হয়েছে ✅");
   go("home");
@@ -233,6 +256,9 @@ if(isAdmin){
   document.querySelectorAll(".admin-only").forEach(e=>e.style.display="block");
 }
 go("home");
+  if(id==="home") setIndicator("🏠 Home");
+if(id==="add") setIndicator("➕ Add Contact");
+if(id==="admin") setIndicator("🔐 Admin Panel");
 </script>
 
 </body>
