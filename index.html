@@ -1,190 +1,387 @@
-<!DOCTYPE html>
-<html lang="bn">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Beldanga Contact Database</title>
-
-<style>
-*{box-sizing:border-box;}
-body{margin:0;font-family:Arial,sans-serif;background:#f4f6f8;padding-bottom:70px;}
-header{background:#1976d2;color:#fff;padding:16px;text-align:center;}
-.main-title{margin:0;font-size:22px;font-weight:700;}
-.sub-title{margin:4px 0;font-size:13px;opacity:.9;}
-#pageIndicator{margin-top:6px;font-size:12px;background:rgba(255,255,255,.2);display:inline-block;padding:4px 12px;border-radius:20px;}
-section{padding:14px;}
-.service{background:#fff;padding:14px;margin:10px 0;border-radius:14px;font-weight:700;box-shadow:0 4px 12px rgba(0,0,0,.12);cursor:pointer;}
-.card{background:#fff;padding:16px;margin:12px 0;border-radius:16px;box-shadow:0 6px 16px rgba(0,0,0,.15);position:relative;}
-.edit-btn{position:absolute;top:12px;right:12px;cursor:pointer;opacity:.6;}
-.edit-btn:hover{opacity:1;}
-.call{display:block;margin-top:12px;padding:14px;background:#2e7d32;color:#fff;text-align:center;border-radius:12px;text-decoration:none;font-weight:bold;}
-.inline-add-btn{width:100%;padding:12px;border-radius:12px;background:#1976d2;color:#fff;border:none;font-weight:bold;margin-bottom:12px;}
-#inlineAddForm input,#inlineAddForm button{width:100%;padding:12px;margin-bottom:10px;border-radius:8px;}
-#inlineAddForm button{background:#1976d2;color:#fff;border:none;font-weight:bold;}
-#bottomNav{position:fixed;bottom:0;left:0;right:0;height:60px;background:#fff;display:flex;border-top:1px solid #ccc;}
-#bottomNav button{flex:1;border:none;background:none;font-weight:bold;}
-</style>
-</head>
-
-<body>
-
-<header>
-  <h1 class="main-title">Beldanga Contact Database</h1>
-  <p class="sub-title">Trusted Local Services of Beldanga</p>
-  <div id="pageIndicator">🏠 Home</div>
-</header>
-
-<!-- LOGIN -->
+<!DOCTYPE html>        
+<html lang="bn">        
+<head>        
+<meta charset="UTF-8">        
+<meta name="viewport" content="width=device-width, initial-scale=1.0">        
+<title>Beldanga Contact Database</title>        
+        
+<style>        
+*{box-sizing:border-box;}        
+body{margin:0;font-family:Arial,sans-serif;background:#f4f6f8;padding-bottom:70px;}        
+header{background:#1976d2;color:#fff;padding:16px;text-align:center;}        
+.main-title{margin:0;font-size:22px;font-weight:700;}        
+.sub-title{margin:4px 0;font-size:13px;opacity:.9;}        
+#pageIndicator{margin-top:6px;font-size:12px;background:rgba(255,255,255,.2);display:inline-block;padding:4px 12px;border-radius:20px;}        
+        
+section{padding:14px;}        
+.service{background:#fff;padding:14px;margin:10px 0;border-radius:14px;font-weight:700;box-shadow:0 4px 12px rgba(0,0,0,.12);cursor:pointer;}        
+        
+.card{background:#fff;padding:16px;margin:12px 0;border-radius:16px;box-shadow:0 6px 16px rgba(0,0,0,.15);position:relative;}        
+.edit-btn{position:absolute;top:12px;right:12px;cursor:pointer;opacity:.6;}        
+.edit-btn:hover{opacity:1;}        
+        
+.call{display:block;margin-top:12px;padding:14px;background:#2e7d32;color:#fff;text-align:center;border-radius:12px;text-decoration:none;font-weight:bold;}        
+        
+.inline-add-btn{        
+  width:100%;        
+  padding:12px;        
+  border-radius:12px;        
+  background:#1976d2;        
+  color:#fff;        
+  border:none;        
+  font-weight:bold;        
+  margin-bottom:12px;        
+}        
+        
+#inlineAddForm input,#inlineAddForm button{        
+  width:100%;        
+  padding:12px;        
+  margin-bottom:10px;        
+  border-radius:8px;        
+}        
+        
+#inlineAddForm button{        
+  background:#1976d2;        
+  color:#fff;        
+  border:none;        
+  font-weight:bold;        
+}        
+        
+#bottomNav{position:fixed;bottom:0;left:0;right:0;height:60px;background:#fff;display:flex;border-top:1px solid #ccc;}        
+#bottomNav button{flex:1;border:none;background:none;font-weight:bold;}        
+</style>        
+</head>        
+        
+<body>        
+        
+<header>        
+  <h1 class="main-title">Beldanga Contact Database</h1>        
+  <p class="sub-title">Trusted Local Services of Beldanga</p>        
+  <div id="pageIndicator">🏠 Home</div>        
+</header>        
+        
+<!-- LOGIN -->        
 <section id="login" style="padding-top:40px;">
-  <div id="loginBox" style="
-    background:#fff;
-    max-width:360px;
-    margin:0 auto;
-    padding:20px;
-    border-radius:16px;
-    box-shadow:0 8px 20px rgba(0,0,0,.15);
-    text-align:center;
-  ">
-    <h3>লগইন করুন</h3>
-    <p style="font-size:13px;opacity:.8;">নিজের সার্ভিস যোগ ও এডিট করতে লগইন করুন</p>
-
-    <input id="userId" placeholder="মোবাইল / ইমেইল"
-      style="width:100%;padding:12px;border-radius:10px;border:1px solid #ccc;margin-bottom:14px;">
-
-    <button onclick="login()"
-      style="width:100%;padding:12px;border-radius:12px;background:#1976d2;color:#fff;border:none;font-weight:bold;">
-      🔐 OTP দিয়ে লগইন করুন
-    </button>
-  </div>
-
-  <!-- USER PROFILE -->
-  <div id="userProfile" style="display:none;
-    background:#fff;
-    max-width:360px;
-    margin:20px auto;
-    padding:20px;
-    border-radius:16px;
-    box-shadow:0 8px 20px rgba(0,0,0,.15);
-    text-align:center;
-  ">
-    <h3>👤 আপনার প্রোফাইল</h3>
-    <p><strong>আইডি:</strong> <span id="profileUserId"></span></p>
-
-    <button onclick="go('home')"
-      style="width:100%;padding:12px;border-radius:12px;background:#1976d2;color:#fff;border:none;font-weight:bold;">
-      ➡️ সার্ভিস দেখুন
-    </button>
-  </div>
-</section>
-
-<!-- HOME -->
-<section id="home" style="display:none;">
-  <div class="service" onclick="openService('ফার্নিচার মেকার')">🪑 ফার্নিচার মেকার</div>
-  <div class="service" onclick="openService('পেইন্টার')">🎨 পেইন্টার</div>
-  <div class="service" onclick="openService('ইলেকট্রিশিয়ান')">💡 ইলেকট্রিশিয়ান</div>
-</section>
-
-<!-- SERVICE PAGE -->
-<section id="servicePage" style="display:none;">
-  <h3 id="serviceTitle"></h3>
-  <button class="inline-add-btn" onclick="toggleAddForm()">➕ নিজেকে যোগ করুন</button>
-
-  <div id="inlineAddForm" style="display:none;">
-    <input id="name" placeholder="নাম">
-    <input id="area" placeholder="এলাকা">
-    <input id="phone" placeholder="মোবাইল">
-    <button onclick="addSelf()">যোগ করুন</button>
-  </div>
-
-  <div id="serviceContactList"></div>
-</section>
-
-<div id="bottomNav">
-  <button onclick="go('home')">🏠 Home</button>
-  <button onclick="logout()">🚪 Logout</button>
-</div>
-
-<script>
-let currentUser = localStorage.getItem("currentUser");
-let currentService = "";
-
-function go(id){
-  ["login","home","servicePage"].forEach(s=>document.getElementById(s).style.display="none");
-  document.getElementById(id).style.display="block";
-}
-
-function login(){
-  const u = userId.value.trim();
-  if(!u){
-    alert("মোবাইল বা ইমেইল দিন");
-    return;
-  }
-
-  currentUser = u;
-  localStorage.setItem("currentUser", u);
-
-  document.getElementById("loginBox").style.display = "none";
-  document.getElementById("userProfile").style.display = "block";
-  document.getElementById("profileUserId").innerText = u;
-
+<div id="loginBox" style="
+  background:#fff;
+  max-width:360px;
+  margin:0 auto;
+  padding:20px;
+  border-radius:16px;
+  box-shadow:0 8px 20px rgba(0,0,0,.15);
+  text-align:center;
+">
+        
+    <h3 style="margin:0 0 6px;">লগইন করুন</h3>        
+    <p style="font-size:13px;opacity:.8;margin-bottom:16px;">        
+      নিজের সার্ভিস যোগ ও এডিট করতে লগইন করুন        
+    </p>        
+        
+    <label style="font-size:13px;display:block;text-align:left;margin-bottom:4px;">        
+      মোবাইল নম্বর / ইমেইল        
+    </label>        
+    <input        
+      id="userId"        
+      type="text"        
+      placeholder="যেমন: 9XXXXXXXXX"        
+      style="        
+        width:100%;        
+        padding:12px;        
+        border-radius:10px;        
+        border:1px solid #ccc;        
+        margin-bottom:14px;        
+      "        
+    >        
+        
+    <button        
+      onclick="login()"        
+      style="        
+        width:100%;        
+        padding:12px;        
+        border-radius:12px;        
+        background:#1976d2;        
+        color:#fff;        
+        border:none;        
+        font-weight:bold;        
+        font-size:15px;        
+      "        
+    >        
+      🔐 OTP দিয়ে লগইন করুন        
+    </button>        
+        
+    <p style="font-size:12px;margin-top:12px;opacity:.7;">        
+      🔒 আপনার তথ্য সম্পূর্ণ নিরাপদ        
+    </p>        
+        
+  </div>        
+</section>        
+        
+<!-- HOME -->        
+<section id="home" style="display:none;">        
+  <div class="service" onclick="openService('ফার্নিচার মেকার')">🪑 ফার্নিচার মেকার</div>        
+  <div class="service" onclick="openService('পেইন্টার')">🎨 পেইন্টার</div>        
+  <div class="service" onclick="openService('ইলেকট্রিশিয়ান')">💡 ইলেকট্রিশিয়ান</div>        
+  <div class="service" onclick="openService('রাজমিস্ত্রি')">🧱 রাজমিস্ত্রি</div>        
+  <div class="service" onclick="openService('প্লাম্বার')">🚰 প্লাম্বার</div>        
+  <div class="service" onclick="openService('গ্লাস ফিটার')">🪟 গ্লাস ফিটার</div>        
+  <div class="service" onclick="openService('অ্যালুমিনিয়াম ফ্যাব্রিকেশন')">🚪 অ্যালুমিনিয়াম ফ্যাব্রিকেশন</div>        
+  <div class="service" onclick="openService('ক্লিনার')">🧹 ক্লিনার</div>        
+  <div class="service" onclick="openService('মোবাইল রিপেয়ার')">🛠️ মোবাইল রিপেয়ার</div>        
+  <div class="service" onclick="openService('টেইলার')">🧵 টেইলার</div>        
+        
+  <div class="service" onclick="openService('হাউস কিপার')">🏠 হাউস কিপার</div>        
+  <div class="service" onclick="openService('রাঁধুনি')">🍳 রাঁধুনি</div>        
+  <div class="service" onclick="openService('টেম্পো / পিকআপ ভ্যান')">🚚 টেম্পো / পিকআপ ভ্যান</div>        
+  <div class="service" onclick="openService('ডেলিভারি বয়')">🛵 ডেলিভারি বয়</div>        
+  <div class="service" onclick="openService('কম্পিউটার রিপেয়ার')">💻 কম্পিউটার রিপেয়ার</div>        
+  <div class="service" onclick="openService('ফটোগ্রাফার')">📷 ফটোগ্রাফার</div>        
+  <div class="service" onclick="openService('মালী')">🌿 মালী</div>        
+  <div class="service" onclick="openService('হোম নার্স')">🧑‍⚕️ হোম নার্স</div>        
+  <div class="service" onclick="openService('ইনভার্টার / ব্যাটারি সার্ভিস')">🔋 ইনভার্টার / ব্যাটারি সার্ভিস</div>        
+  <div class="service" onclick="openService('মুদিখানা হোম ডেলিভারি')">🛒 মুদিখানা হোম ডেলিভারি</div>        
+  </section>        
+        
+<!-- SERVICE PAGE -->        
+<section id="servicePage" style="display:none;">        
+  <h3 id="serviceTitle"></h3>        
+        
+  <button class="inline-add-btn" onclick="toggleAddForm()">➕ নিজেকে যোগ করুন</button>        
+        
+  <div id="inlineAddForm" style="display:none;">        
+    <input id="name" placeholder="নাম">        
+    <input id="area" placeholder="এলাকা">        
+    <input id="phone" placeholder="মোবাইল">        
+<button type="button" onclick="addSelf()">যোগ করুন</button>        
+  </div>        
+        
+  <div id="serviceContactList"></div>        
+</section>        
+        
+<!-- Bottom Nav -->        
+<div id="bottomNav">        
+  <button onclick="go('home')">🏠 Home</button>        
+  <button onclick="logout()">🚪 Logout</button>        
+</div>      
+    <!-- USER PROFILE -->        
+<div id="userProfile" style="display:none;">        
+        
+  <h3 style="margin-top:10px;">👤 আপনার প্রোফাইল</h3>        
+        
+  <p style="font-size:14px;">        
+    <strong>আইডি:</strong>        
+    <span id="profileUserId"></span>        
+  </p>        
+        
+  <button        
+    onclick="go('home')"        
+    style="        
+      width:100%;        
+      padding:12px;        
+      border-radius:12px;        
+      background:#1976d2;        
+      color:#fff;        
+      border:none;        
+      font-weight:bold;        
+      margin-top:10px;        
+    "        
+  >        
+    ➡️ সার্ভিস দেখুন        
+  </button>        
+        
+</div>        
+        
+<script>        
+let currentUser = localStorage.getItem("currentUser");        
+let currentService = "";        
+        
+/* Navigation */        
+function go(id){        
+  ["login","home","servicePage"].forEach(s=>{        
+    const el=document.getElementById(s);        
+    if(el) el.style.display="none";        
+  });        
+  document.getElementById(id).style.display="block";        
+  document.getElementById("pageIndicator").innerText =        
+    id==="home"?"🏠 Home":id==="servicePage"?currentService:"";        
+}        
+        
+/* Login */        
+function login(){        
+  const u = userId.value.trim();        
+  if(!u){        
+    alert("মোবাইল বা ইমেইল দিন");        
+    return;        
+  
+  }        
+        
+  currentUser = u;        
+  localStorage.setItem("currentUser", u);        
+        
+  // 🔁 Login UI → Profile UI        
+  document.getElementById("loginBox").style.display = "flex";        
+  document.getElementById("userProfile").style.display = "block";        
+  document.getElementById("profileUserId").innerText = u;        
+        
   alert("OTP Verified ✅");
-}
-  function showProfileIfLoggedIn(){
-  if(currentUser){
-    document.getElementById("loginBox").style.display = "none";
-    document.getElementById("userProfile").style.display = "block";
-    document.getElementById("profileUserId").innerText = currentUser;
-    go("login"); // login page কিন্তু profile view
-  }else{
-    go("login");
+  userId.value = "";
+}        
+        
+/* Logout */        
+function logout(){        
+  localStorage.removeItem("currentUser");        
+  currentUser=null;        
+  go("login");        
+}        
+        
+/* Service Open */        
+function openService(service){        
+  currentService = service;        
+  go("servicePage");        
+  serviceTitle.innerText = service+" কন্টাক্ট";        
+  inlineAddForm.style.display="none";        
+  loadServiceContacts();        
+}        
+        
+/* Toggle inline add */        
+function toggleAddForm(){        
+  if(!currentUser){alert("Login করুন");return;}        
+  inlineAddForm.style.display =        
+    inlineAddForm.style.display==="none"?"block":"none";        
+}        
+        
+/* Add self */        
+function addSelf(){        
+  if(!currentUser){        
+    alert("Login করুন");        
+    return;        
+  }        
+        
+  const nameEl = document.getElementById("name");        
+  const areaEl = document.getElementById("area");        
+  const phoneEl = document.getElementById("phone");        
+        
+  if(!nameEl.value.trim() || !phoneEl.value.trim()){        
+    alert("সব ঘর পূরণ করুন");        
+    return;        
+  }        
+        
+  let data = JSON.parse(localStorage.getItem("contacts") || "[]");        
+        
+  data.push({        
+    name: nameEl.value.trim(),        
+    work: currentService,        
+    area: areaEl.value.trim(),        
+    phone: phoneEl.value.trim(),        
+    owner: currentUser        
+  });        
+        
+  localStorage.setItem("contacts", JSON.stringify(data));        
+        
+  nameEl.value = "";        
+  areaEl.value = "";        
+  phoneEl.value = "";        
+        
+  inlineAddForm.style.display = "none";        
+        
+  // ⭐ এই লাইনটাই সবচেয়ে গুরুত্বপূর্ণ        
+  loadServiceContacts();        
+  }        
+  function enableInlineEdit(phone){        
+  const card = document.getElementById("card-"+phone);        
+  card.querySelector(".view-mode").style.display = "none";        
+  card.querySelector(".edit-mode").style.display = "block";        
+}        
+        
+function saveInlineEdit(oldPhone){        
+  let all = JSON.parse(localStorage.getItem("contacts") || "[]");        
+        
+  let idx = all.findIndex(        
+    c => c.phone === oldPhone && c.owner === currentUser        
+  );        
+  if(idx === -1) return;        
+        
+  const newName = document.getElementById("edit-name-"+oldPhone).value.trim();        
+  const newArea = document.getElementById("edit-area-"+oldPhone).value.trim();        
+  const newPhone = document.getElementById("edit-phone-"+oldPhone).value.trim();        
+        
+  if(!newName || !newPhone){        
+    alert("নাম ও ফোন আবশ্যক");        
+    return;        
+  }        
+        
+  all[idx].name = newName;        
+  all[idx].area = newArea;        
+  all[idx].phone = newPhone;        
+        
+  localStorage.setItem("contacts", JSON.stringify(all));        
+        
+  // আবার লিস্ট reload        
+  loadServiceContacts();        
+    }        
+/* Load service contacts */        
+function loadServiceContacts(){        
+  let list = document.getElementById("serviceContactList");        
+  list.innerHTML = "";        
+        
+  let all = JSON.parse(localStorage.getItem("contacts") || "[]");        
+  let f = all.filter(c => c.work === currentService);        
+        
+  if(f.length === 0){        
+    list.innerHTML = "<p>এই সার্ভিসে কোনো কন্টাক্ট নেই</p>";        
+    return;        
+  }        
+        
+f.forEach(c=>{        
+  list.innerHTML += `        
+  <div class="card" id="card-${c.phone}">        
+    ${c.owner === currentUser 
+  ? `<span class="edit-btn" onclick="enableInlineEdit('${c.phone}')">✏️</span>`
+  : ``
   }
-  }
-
-function logout(){
-  localStorage.removeItem("currentUser");
-  location.reload();
-}
-
-function openService(s){
-  currentService=s;
-  go("servicePage");
-  serviceTitle.innerText=s+" কন্টাক্ট";
-  loadServiceContacts();
-}
-
-function toggleAddForm(){
-  inlineAddForm.style.display=inlineAddForm.style.display==="none"?"block":"none";
-}
-
-function addSelf(){
-  let data=JSON.parse(localStorage.getItem("contacts")||"[]");
-  data.push({name:name.value,area:area.value,phone:phone.value,work:currentService,owner:currentUser});
-  localStorage.setItem("contacts",JSON.stringify(data));
-  loadServiceContacts();
-}
-
-function loadServiceContacts(){
-  serviceContactList.innerHTML="";
-  let all=JSON.parse(localStorage.getItem("contacts")||"[]").filter(c=>c.work===currentService);
-  all.forEach(c=>{
-    serviceContactList.innerHTML+=`
-    <div class="card">
-      <span class="edit-btn">✏️</span>
-      <h3>${c.name}</h3>
-      <p>${c.area}</p>
-      <a class="call" href="tel:${c.phone}">📞 কল করুন</a>
-    </div>`;
-  });
-}
-
+    <div class="view-mode">        
+      <h3>${c.name}</h3>        
+      <p>${c.area}</p>        
+      <a class="call" href="tel:${c.phone}">📞 কল করুন</a>        
+    </div>        
+        
+    <div class="edit-mode" style="display:none;">        
+      <input id="edit-name-${c.phone}" value="${c.name}">        
+      <input id="edit-area-${c.phone}" value="${c.area}">        
+      <input id="edit-phone-${c.phone}" value="${c.phone}">        
+      <button onclick="saveInlineEdit('${c.phone}')">💾 Save</button>        
+    </div>        
+  </div>        
+`;        
+});        
+  }        
+/* Edit */        
+function startEdit(phone){        
+  let all=JSON.parse(localStorage.getItem("contacts")||"[]");        
+  let c=all.find(x=>x.phone===phone && x.owner===currentUser);        
+  if(!c)return;        
+        
+  name.value=c.name;        
+  area.value=c.area;        
+  phone.value=c.phone;        
+        
+  all = all.filter(x=>!(x.phone===phone && x.owner===currentUser));        
+  localStorage.setItem("contacts",JSON.stringify(all));        
+  inlineAddForm.style.display="block";        
+}        
+        
+/* Init */
 if(currentUser){
-  loginBox.style.display="none";
-  userProfile.style.display="block";
-  profileUserId.innerText=currentUser;
+  document.getElementById("login").style.display = "none";
+  document.getElementById("home").style.display = "none";
+  document.getElementById("servicePage").style.display = "none";
+
+  document.getElementById("userProfile").style.display = "block";
+  document.getElementById("profileUserId").innerText = currentUser;
 }else{
   go("login");
-}
-</script>
-
-</body>
-</html>
+  }
+  
+  </script>
+  
+</body>        
+    </html>
