@@ -56,12 +56,8 @@ section{padding:14px;}
         
 <header>        
   <h1 class="main-title">Beldanga Contact Database</h1>        
-  <p class="sub-title">Trusted Local Services of Beldanga</p>        
-<div id="bottomNav">
-  <button onclick="go('home')">🏠 Home</button>
-  <button onclick="go('userProfile')">👤 Profile</button>
-  <button onclick="logout()">🚪 Logout</button>      
-</div>        
+  <p class="sub-title">Trusted Local Services of Beldanga</p>
+<div id="pageIndicator">🏠 Home</div>     
 </header>        
 <!-- LOGIN -->
 <section id="login" style="padding-top:40px;">
@@ -121,7 +117,10 @@ section{padding:14px;}
 
   </div>
 </section>
-
+<section id="admin" style="display:none;">
+  <h3>🛡️ Admin Approval Panel</h3>
+  <div id="pendingList"></div>
+</section>
 <!-- HOME -->        
 <section id="home" style="display:none;">        
   <div class="service" onclick="openService('ফার্নিচার মেকার')">🪑 ফার্নিচার মেকার</div>        
