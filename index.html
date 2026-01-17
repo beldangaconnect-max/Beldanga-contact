@@ -248,6 +248,38 @@ function addSelf(){
   // ⭐ এই লাইনটাই সবচেয়ে গুরুত্বপূর্ণ
   loadServiceContacts();
   }
+  function enableInlineEdit(phone){
+  const card = document.getElementById("card-"+phone);
+  card.querySelector(".view-mode").style.display = "none";
+  card.querySelector(".edit-mode").style.display = "block";
+}
+
+function saveInlineEdit(oldPhone){
+  let all = JSON.parse(localStorage.getItem("contacts") || "[]");
+
+  let idx = all.findIndex(
+    c => c.phone === oldPhone && c.owner === currentUser
+  );
+  if(idx === -1) return;
+
+  const newName = document.getElementById("edit-name-"+oldPhone).value.trim();
+  const newArea = document.getElementById("edit-area-"+oldPhone).value.trim();
+  const newPhone = document.getElementById("edit-phone-"+oldPhone).value.trim();
+
+  if(!newName || !newPhone){
+    alert("নাম ও ফোন আবশ্যক");
+    return;
+  }
+
+  all[idx].name = newName;
+  all[idx].area = newArea;
+  all[idx].phone = newPhone;
+
+  localStorage.setItem("contacts", JSON.stringify(all));
+
+  // আবার লিস্ট reload
+  loadServiceContacts();
+    }
 /* Load service contacts */
 function loadServiceContacts(){
   let list = document.getElementById("serviceContactList");
@@ -263,15 +295,23 @@ function loadServiceContacts(){
 
 f.forEach(c=>{
   list.innerHTML += `
-    <div class="card">
-      ${c.owner === currentUser 
-        ? `<span class="edit-btn" onclick="startEdit('${c.phone}')">✏️</span>` 
-        : ``}
+  <div class="card" id="card-${c.phone}">
+    <span class="edit-btn" onclick="enableInlineEdit('${c.phone}')">✏️</span>
+
+    <div class="view-mode">
       <h3>${c.name}</h3>
-      <p>${c.area || ""}</p>
+      <p>${c.area}</p>
       <a class="call" href="tel:${c.phone}">📞 কল করুন</a>
     </div>
-  `;
+
+    <div class="edit-mode" style="display:none;">
+      <input id="edit-name-${c.phone}" value="${c.name}">
+      <input id="edit-area-${c.phone}" value="${c.area}">
+      <input id="edit-phone-${c.phone}" value="${c.phone}">
+      <button onclick="saveInlineEdit('${c.phone}')">💾 Save</button>
+    </div>
+  </div>
+`;
 });
   }
 /* Edit */
