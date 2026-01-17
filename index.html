@@ -134,6 +134,11 @@ footer{
   <div class="service" onclick="selectService('টেম্পো / পিকআপ ভ্যান')">🚚 টেম্পো / পিকআপ ভ্যান</div>
 
   <div id="contactList"></div>
+<!-- SERVICE CONTACTS -->
+<section id="servicePage" style="display:none;">
+  <h3 id="serviceTitle"></h3>
+  <div id="serviceContactList"></div>
+  
 </section>
 
 <!-- ADD -->
@@ -283,25 +288,55 @@ function searchContact(){
 }
 
 /* Service Select */
-function selectService(s){
-  if(!isAdmin){
-    alert("এই অপশন ব্যবহার করতে Admin Login করুন");
-    go("admin");
+function selectService(service){
+  localStorage.setItem("selectedService", service);
+  showServicePage(service);
+      }
+      function showServicePage(service){
+  // সব section লুকাও
+  ["home","add","admin","servicePage"].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.style.display="none";
+  });
+
+  document.getElementById("servicePage").style.display="block";
+  document.getElementById("serviceTitle").innerText = service + " কন্টাক্ট";
+
+  let all = JSON.parse(localStorage.getItem("contacts") || "[]");
+  let list = document.getElementById("serviceContactList");
+  list.innerHTML = "";
+
+  let filtered = all.filter(c => c.work === service);
+
+  if(filtered.length === 0){
+    list.innerHTML = "<p>এই সার্ভিসে এখনো কোনো কন্টাক্ট নেই</p>";
     return;
   }
-  work.value = s.trim();
-  go("add");
-}
+
+  filtered.forEach(c=>{
+    list.innerHTML += `
+      <div class="card">
+        <h3>${c.name}</h3>
+        <p>কাজ: ${c.work}</p>
+        <p>এলাকা: ${c.area}</p>
+        <a class="call" href="${c.phone.includes('@')?'mailto:':'tel:'}${c.phone}">
+          ${c.phone.includes('@')?'📧 ইমেইল করুন':'📞 কল করুন'}
+        </a>
+      </div>
+    `;
+  });
+      }
+      
 
 /* Init */
-go("home");
-loadContacts();
+function go(id){
+  ["home","add","admin","servicePage"].forEach(s=>{
+    const el = document.getElementById(s);
+    if(el) el.style.display="none";
+  });
 
-/* Restore admin UI */
-if(isAdmin){
-  document.querySelectorAll(".admin-only")
-    .forEach(e=>e.style.display="block");
-}
+  document.getElementById(id).style.display="block";
+      }
     </script>
 
 </body>
