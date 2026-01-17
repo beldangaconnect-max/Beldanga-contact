@@ -333,7 +333,8 @@ function saveInlineEdit(oldPhone){
         
   all[idx].name = newName;        
   all[idx].area = newArea;        
-  all[idx].phone = newPhone;        
+  all[idx].phone = newPhone;
+ all[idx].status = "pending";       
         
   localStorage.setItem("contacts", JSON.stringify(all));        
         
@@ -347,16 +348,14 @@ function loadServiceContacts(){
         
   let all = JSON.parse(localStorage.getItem("contacts") || "[]");        
   let f = all.filter(
-  c => c.work === currentService && c.status === "approved"
+  c => c.work === currentService &&
+  (c.status === "approved" || c.owner === currentUser)
 );
+        <a class="call" href="tel:${c.phone}">📞 কল করুন</a>
   if(f.length === 0){        
     list.innerHTML = "<p>এই সার্ভিসে কোনো কন্টাক্ট নেই</p>";        
     return;        
-  }    
-`;
-});
-}
-        
+  }       
 f.forEach(c=>{        
   list.innerHTML += `        
   <div class="card" id="card-${c.phone}">        
@@ -364,23 +363,17 @@ f.forEach(c=>{
   ? `<span class="edit-btn" onclick="enableInlineEdit('${c.phone}')">✏️</span>`
   : ``
   }
-    <div class="view-mode">        
-      <h3>${c.name}</h3>        
-      <p>${c.area}</p>        
-      ${
-  c.status === "approved"
-    ? `<a class="call" href="tel:${c.phone}">📞 কল করুন</a>`
-    : `<p style="color:#ff9800;font-size:13px;">⏳ Admin approval pending</p>`
-        }        
-    </div>        
-        
-    <div class="edit-mode" style="display:none;">        
-      <input id="edit-name-${c.phone}" value="${c.name}">        
-      <input id="edit-area-${c.phone}" value="${c.area}">        
-      <input id="edit-phone-${c.phone}" value="${c.phone}">        
-      <button onclick="saveInlineEdit('${c.phone}')">💾 Save</button>        
-    </div>        
-  </div>        
+<div class="view-mode">        
+<h3>${c.name}</h3>        
+<p>${c.area}</p>           
+</div>        
+ <div class="edit-mode" style="display:none;">        
+<input id="edit-name-${c.phone}" value="${c.name}">        
+<input id="edit-area-${c.phone}" value="${c.area}">        
+<input id="edit-phone-${c.phone}" value="${c.phone}">        
+<button onclick="saveInlineEdit('${c.phone}')">💾 Save</button>        
+</div>        
+</div>        
 `;        
 });        
   }        
@@ -399,6 +392,11 @@ function startEdit(phone){
   inlineAddForm.style.display="block";        
 }        
 function loadPending(){
+        if(currentUser !== ADMIN_ID){
+  alert("Unauthorized");
+  go("home");
+  return;
+        }
   let list = document.getElementById("pendingList");
   list.innerHTML = "";
 
