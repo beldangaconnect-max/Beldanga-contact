@@ -57,7 +57,11 @@ section{padding:14px;}
 <header>        
   <h1 class="main-title">Beldanga Contact Database</h1>        
   <p class="sub-title">Trusted Local Services of Beldanga</p>        
-  <div id="pageIndicator">🏠 Home</div>        
+<div id="bottomNav">
+  <button onclick="go('home')">🏠 Home</button>
+  <button onclick="go('userProfile')">👤 Profile</button>
+  <button onclick="logout()">🚪 Logout</button>      
+</div>        
 </header>        
 <!-- LOGIN -->
 <section id="login" style="padding-top:40px;">
