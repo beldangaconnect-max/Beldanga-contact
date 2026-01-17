@@ -93,6 +93,12 @@ section{padding:14px;}
   <div class="service" onclick="openService('পেইন্টার')">🎨 পেইন্টার</div>
   <div class="service" onclick="openService('ইলেকট্রিশিয়ান')">💡 ইলেকট্রিশিয়ান</div>
   <div class="service" onclick="openService('রাজমিস্ত্রি')">🧱 রাজমিস্ত্রি</div>
+  <div class="service" onclick="openService('প্লাম্বার')">🚰 প্লাম্বার</div>
+  <div class="service" onclick="openService('গ্লাস ফিটার')">🪟 গ্লাস ফিটার</div>
+  <div class="service" onclick="openService('অ্যালুমিনিয়াম ফ্যাব্রিকেশন')">🚪 অ্যালুমিনিয়াম ফ্যাব্রিকেশন</div>
+  <div class="service" onclick="openService('ক্লিনার')">🧹 ক্লিনার</div>
+  <div class="service" onclick="openService('মোবাইল রিপেয়ার')">🛠️ মোবাইল রিপেয়ার</div>
+  <div class="service" onclick="openService('টেইলার')">🧵 টেইলার</div>
 </section>
 
 <!-- SERVICE PAGE -->
@@ -141,11 +147,12 @@ function go(id){
 
 /* Admin */
 function adminLogin(){
-  if(adminPass.value===ADMIN_PASSWORD){
+  if(adminPass.value.trim()===ADMIN_PASSWORD){
     isAdmin=true;
     localStorage.setItem("isAdmin","true");
     document.querySelectorAll(".admin-only").forEach(e=>e.style.display="block");
     go("home");
+    alert("Admin Login Successful");
   }else alert("Wrong password");
 }
 function adminLogout(){
@@ -161,15 +168,39 @@ function safeAdd(){
   go("add");
 }
 
-/* Add Contact */
+/* Add Contact (FIXED) */
 function addContact(){
-  if(!name.value||!work.value||!phone.value){
-    alert("সব ঘর পূরণ করুন");return;
+  const nameEl=document.getElementById("name");
+  const workEl=document.getElementById("work");
+  const areaEl=document.getElementById("area");
+  const phoneEl=document.getElementById("phone");
+
+  if(
+    nameEl.value.trim()==="" ||
+    workEl.value.trim()==="" ||
+    phoneEl.value.trim()===""
+  ){
+    alert("সব ঘর পূরণ করুন");
+    return;
   }
+
   let data=JSON.parse(localStorage.getItem("contacts")||"[]");
-  data.push({name:name.value,work:work.value,area:area.value,phone:phone.value});
+
+  data.push({
+    name:nameEl.value.trim(),
+    work:workEl.value.trim(),
+    area:areaEl.value.trim(),
+    phone:phoneEl.value.trim()
+  });
+
   localStorage.setItem("contacts",JSON.stringify(data));
-  name.value=work.value=area.value=phone.value="";
+
+  nameEl.value="";
+  workEl.value="";
+  areaEl.value="";
+  phoneEl.value="";
+
+  alert("কন্টাক্ট যোগ হয়েছে ✅");
   go("home");
 }
 
@@ -181,7 +212,12 @@ function openService(service){
   let list=document.getElementById("serviceContactList");
   list.innerHTML="";
   let f=all.filter(c=>c.work===service);
-  if(!f.length){list.innerHTML="<p>কোনো কন্টাক্ট নেই</p>";return;}
+
+  if(!f.length){
+    list.innerHTML="<p>এই সার্ভিসে কোনো কন্টাক্ট নেই</p>";
+    return;
+  }
+
   f.forEach(c=>{
     list.innerHTML+=`
     <div class="card">
@@ -200,4 +236,4 @@ go("home");
 </script>
 
 </body>
-  </html>
+</html>
