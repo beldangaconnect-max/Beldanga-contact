@@ -261,20 +261,18 @@ function loadServiceContacts(){
     return;
   }
 
-  f.forEach(c=>{
-    list.innerHTML += `
-      <div class="card">
-        ${c.owner === currentUser
-          ? `<span class="edit-btn" onclick="startEdit('${c.phone}')">✏️</span>`
-          : ""
-        }
-        <h3>${c.name}</h3>
-        <p>${c.area || ""}</p>
-        <a class="call" href="tel:${c.phone}">📞 কল করুন</a>
-      </div>
-    `;
-  });
-}
+f.forEach(c=>{
+  list.innerHTML += `
+    <div class="card">
+      ${c.owner === currentUser 
+        ? `<span class="edit-btn" onclick="startEdit('${c.phone}')">✏️</span>` 
+        : ``}
+      <h3>${c.name}</h3>
+      <p>${c.area || ""}</p>
+      <a class="call" href="tel:${c.phone}">📞 কল করুন</a>
+    </div>
+  `;
+});
 
 /* Edit */
 function startEdit(phone){
