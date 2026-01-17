@@ -61,6 +61,10 @@ section{padding:14px;}
 </header>        
         
 <!-- LOGIN -->        
+        <section id="admin" style="display:none;">
+  <h3>🛡️ Admin Approval Panel</h3>
+  <div id="pendingList"></div>
+        </section>
 <section id="login" style="padding-top:40px;">
 <div id="loginBox" style="
   background:#fff;
@@ -188,9 +192,10 @@ section{padding:14px;}
     ➡️ সার্ভিস দেখুন        
   </button>        
         
-</div>        
+</div>  
         
-<script>        
+<script>      
+const ADMIN_ID = "admin@beldanga";        
 let currentUser = localStorage.getItem("currentUser");        
 let currentService = "";        
         
@@ -205,26 +210,30 @@ function go(id){
     id==="home"?"🏠 Home":id==="servicePage"?currentService:"";        
 }        
         
-/* Login */        
-function login(){        
-  const u = userId.value.trim();        
-  if(!u){        
-    alert("মোবাইল বা ইমেইল দিন");        
-    return;        
-  
-  }        
-        
-  currentUser = u;        
-  localStorage.setItem("currentUser", u);        
-        
-  // 🔁 Login UI → Profile UI        
-  document.getElementById("loginBox").style.display = "flex";        
-  document.getElementById("userProfile").style.display = "block";        
-  document.getElementById("profileUserId").innerText = u;        
-        
+/* Login */
+function login(){
+  const u = userId.value.trim();
+  if(!u){
+    alert("মোবাইল বা ইমেইল দিন");
+    return;
+  if(u === ADMIN_ID){
+  go("admin");
+  loadPending();
+  }
+
+  currentUser = u;
+  localStorage.setItem("currentUser", u);
+
+  // ✅ Login box hide
+  document.getElementById("login").style.display = "none";
+
+  // ✅ Profile show
+  document.getElementById("userProfile").style.display = "block";
+  document.getElementById("profileUserId").innerText = u;
+
   alert("OTP Verified ✅");
   userId.value = "";
-}        
+        }
         
 /* Logout */        
 function logout(){        
@@ -266,14 +275,24 @@ function addSelf(){
   }        
         
   let data = JSON.parse(localStorage.getItem("contacts") || "[]");        
+       // ❌ একই user একই service-এ একবারের বেশি add করতে পারবে না
+const alreadyAdded = data.find(
+  c => c.owner === currentUser && c.work === currentService
+);
+
+if(alreadyAdded){
+  alert("আপনি এই সার্ভিসে আগেই যোগ করা আছেন। এডিট করতে ✏️ ব্যবহার করুন।");
+  return;
+}
         
-  data.push({        
-    name: nameEl.value.trim(),        
-    work: currentService,        
-    area: areaEl.value.trim(),        
-    phone: phoneEl.value.trim(),        
-    owner: currentUser        
-  });        
+  data.push({
+  name: nameEl.value.trim(),
+  work: currentService,
+  area: areaEl.value.trim(),
+  phone: phoneEl.value.trim(),
+  owner: currentUser,
+  status: "pending" // ⭐ NEW
+});
         
   localStorage.setItem("contacts", JSON.stringify(data));        
         
@@ -281,11 +300,10 @@ function addSelf(){
   areaEl.value = "";        
   phoneEl.value = "";        
         
-  inlineAddForm.style.display = "none";        
-        
-  // ⭐ এই লাইনটাই সবচেয়ে গুরুত্বপূর্ণ        
+  inlineAddForm.style.display = "none";             
   loadServiceContacts();        
   }        
+        
   function enableInlineEdit(phone){        
   const card = document.getElementById("card-"+phone);        
   card.querySelector(".view-mode").style.display = "none";        
@@ -329,7 +347,55 @@ function loadServiceContacts(){
   if(f.length === 0){        
     list.innerHTML = "<p>এই সার্ভিসে কোনো কন্টাক্ট নেই</p>";        
     return;        
-  }        
+  }    
+      function approve(index){
+  let all = JSON.parse(localStorage.getItem("contacts") || "[]");
+  let pending = all.filter(c => c.status === "pending");
+
+  let target = pending[index];
+  let realIndex = all.findIndex(
+    c => c.phone === target.phone && c.owner === target.owner
+  );
+
+  all[realIndex].status = "approved";
+  localStorage.setItem("contacts", JSON.stringify(all));
+
+  loadPending();
+     function approve(index){
+  let all = JSON.parse(localStorage.getItem("contacts") || "[]");
+  let pending = all.filter(c => c.status === "pending");
+
+  let target = pending[index];
+  let realIndex = all.findIndex(
+    c => c.phone === target.phone && c.owner === target.owner
+  );
+
+  all[realIndex].status = "approved";
+  localStorage.setItem("contacts", JSON.stringify(all));
+
+  loadPending();         
+  function loadPending(){
+  let list = document.getElementById("pendingList");
+  list.innerHTML = "";
+
+  let all = JSON.parse(localStorage.getItem("contacts") || "[]");
+  let pending = all.filter(c => c.status === "pending");
+
+  if(!pending.length){
+    list.innerHTML = "<p>কোনো pending request নেই</p>";
+    return;
+  }
+
+  pending.forEach((c,i)=>{
+    list.innerHTML += `
+      <div class="card">
+        <h4>${c.name} (${c.work})</h4>
+        <p>${c.area} | ${c.phone}</p>
+        <button onclick="approve(${i})">✅ Approve</button>
+      </div>
+`;
+});
+}
         
 f.forEach(c=>{        
   list.innerHTML += `        
@@ -341,7 +407,11 @@ f.forEach(c=>{
     <div class="view-mode">        
       <h3>${c.name}</h3>        
       <p>${c.area}</p>        
-      <a class="call" href="tel:${c.phone}">📞 কল করুন</a>        
+      ${
+  c.status === "approved"
+    ? `<a class="call" href="tel:${c.phone}">📞 কল করুন</a>`
+    : `<p style="color:#ff9800;font-size:13px;">⏳ Admin approval pending</p>`
+        }        
     </div>        
         
     <div class="edit-mode" style="display:none;">        
@@ -372,16 +442,17 @@ function startEdit(phone){
 /* Init */
 if(currentUser){
   document.getElementById("login").style.display = "none";
-  document.getElementById("home").style.display = "none";
-  document.getElementById("servicePage").style.display = "none";
-
   document.getElementById("userProfile").style.display = "block";
   document.getElementById("profileUserId").innerText = currentUser;
+
+  if(currentUser === ADMIN_ID){
+    go("admin");
+    loadPending();
+  }
 }else{
   go("login");
-  }
-  
-  </script>
-  
+}  
+  </script> 
+        
 </body>        
     </html>
