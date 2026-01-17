@@ -35,18 +35,45 @@ section{padding:14px;}
 </header>
 
 <!-- LOGIN -->
-<section id="login">
-  <div id="loginBox" style="background:#fff;max-width:360px;margin:40px auto;padding:20px;border-radius:16px;box-shadow:0 8px 20px rgba(0,0,0,.15);text-align:center;">
+<section id="login" style="padding-top:40px;">
+  <div id="loginBox" style="
+    background:#fff;
+    max-width:360px;
+    margin:0 auto;
+    padding:20px;
+    border-radius:16px;
+    box-shadow:0 8px 20px rgba(0,0,0,.15);
+    text-align:center;
+  ">
     <h3>লগইন করুন</h3>
-    <input id="userId" placeholder="মোবাইল / ইমেইল" style="width:100%;padding:12px;border-radius:10px;border:1px solid #ccc;">
-    <button onclick="login()" style="margin-top:12px;width:100%;padding:12px;border-radius:12px;background:#1976d2;color:#fff;border:none;font-weight:bold;">🔐 OTP দিয়ে লগইন</button>
+    <p style="font-size:13px;opacity:.8;">নিজের সার্ভিস যোগ ও এডিট করতে লগইন করুন</p>
+
+    <input id="userId" placeholder="মোবাইল / ইমেইল"
+      style="width:100%;padding:12px;border-radius:10px;border:1px solid #ccc;margin-bottom:14px;">
+
+    <button onclick="login()"
+      style="width:100%;padding:12px;border-radius:12px;background:#1976d2;color:#fff;border:none;font-weight:bold;">
+      🔐 OTP দিয়ে লগইন করুন
+    </button>
   </div>
 
-  <!-- PROFILE -->
-  <div id="userProfile" style="display:none;text-align:center;">
+  <!-- USER PROFILE -->
+  <div id="userProfile" style="display:none;
+    background:#fff;
+    max-width:360px;
+    margin:20px auto;
+    padding:20px;
+    border-radius:16px;
+    box-shadow:0 8px 20px rgba(0,0,0,.15);
+    text-align:center;
+  ">
     <h3>👤 আপনার প্রোফাইল</h3>
-    <p><strong>ID:</strong> <span id="profileUserId"></span></p>
-    <button onclick="go('home')" style="padding:12px;border-radius:12px;background:#1976d2;color:#fff;border:none;font-weight:bold;">➡️ সার্ভিস দেখুন</button>
+    <p><strong>আইডি:</strong> <span id="profileUserId"></span></p>
+
+    <button onclick="go('home')"
+      style="width:100%;padding:12px;border-radius:12px;background:#1976d2;color:#fff;border:none;font-weight:bold;">
+      ➡️ সার্ভিস দেখুন
+    </button>
   </div>
 </section>
 
@@ -87,14 +114,31 @@ function go(id){
 }
 
 function login(){
-  const u=userId.value.trim();
-  if(!u)return alert("আইডি দিন");
-  currentUser=u;
-  localStorage.setItem("currentUser",u);
-  loginBox.style.display="none";
-  userProfile.style.display="block";
-  profileUserId.innerText=u;
+  const u = userId.value.trim();
+  if(!u){
+    alert("মোবাইল বা ইমেইল দিন");
+    return;
+  }
+
+  currentUser = u;
+  localStorage.setItem("currentUser", u);
+
+  document.getElementById("loginBox").style.display = "none";
+  document.getElementById("userProfile").style.display = "block";
+  document.getElementById("profileUserId").innerText = u;
+
+  alert("OTP Verified ✅");
 }
+  function showProfileIfLoggedIn(){
+  if(currentUser){
+    document.getElementById("loginBox").style.display = "none";
+    document.getElementById("userProfile").style.display = "block";
+    document.getElementById("profileUserId").innerText = currentUser;
+    go("login"); // login page কিন্তু profile view
+  }else{
+    go("login");
+  }
+  }
 
 function logout(){
   localStorage.removeItem("currentUser");
