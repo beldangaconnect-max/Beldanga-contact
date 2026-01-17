@@ -68,6 +68,7 @@ section{padding:14px;}
 
 <!-- HOME -->
 <section id="home" style="display:none;">
+  <div id="serviceContactList"></div>
   <div class="service" onclick="openService('ফার্নিচার মেকার')">🪑 ফার্নিচার মেকার</div>
   <div class="service" onclick="openService('পেইন্টার')">🎨 পেইন্টার</div>
   <div class="service" onclick="openService('ইলেকট্রিশিয়ান')">💡 ইলেকট্রিশিয়ান</div>
@@ -187,24 +188,29 @@ function addSelf(){
 
 /* Load service contacts */
 function loadServiceContacts(){
-  let list=serviceContactList;
-  list.innerHTML="";
-  let all=JSON.parse(localStorage.getItem("contacts")||"[]");
-  let f=all.filter(c=>c.work===currentService);
+  let list = document.getElementById("serviceContactList");
+  list.innerHTML = "";
 
-  if(!f.length){
-    list.innerHTML="<p>এই সার্ভিসে কোনো কন্টাক্ট নেই</p>";
+  let all = JSON.parse(localStorage.getItem("contacts") || "[]");
+  let f = all.filter(c => c.work === currentService);
+
+  if(f.length === 0){
+    list.innerHTML = "<p>এই সার্ভিসে কোনো কন্টাক্ট নেই</p>";
     return;
   }
 
   f.forEach(c=>{
-    list.innerHTML+=`
-    <div class="card">
-      ${c.owner===currentUser?`<span class="edit-btn" onclick="startEdit('${c.phone}')">✏️</span>`:""}
-      <h3>${c.name}</h3>
-      <p>${c.area}</p>
-      <a class="call" href="tel:${c.phone}">📞 কল করুন</a>
-    </div>`;
+    list.innerHTML += `
+      <div class="card">
+        ${c.owner === currentUser ? 
+          `<span class="edit-btn" onclick="startEdit('${c.phone}')">✏️</span>` 
+          : ""
+        }
+        <h3>${c.name}</h3>
+        <p>${c.area || ""}</p>
+        <a class="call" href="tel:${c.phone}">📞 কল করুন</a>
+      </div>
+    `;
   });
 }
 
