@@ -347,46 +347,39 @@ function loadServiceContacts(){
   c => c.work === currentService &&
   (c.status === "approved" || c.owner === currentUser)
 );
-        <a class="call" href="tel:${c.phone}">📞 কল করুন</a>
   if(f.length === 0){        
     list.innerHTML = "<p>এই সার্ভিসে কোনো কন্টাক্ট নেই</p>";        
     return;        
   }       
-f.forEach(c=>{        
-  list.innerHTML += `        
-  <div class="card" id="card-${c.phone}">        
-    ${c.owner === currentUser 
-  ? `<span class="edit-btn" onclick="enableInlineEdit('${c.phone}')">✏️</span>`
-  : ``
-  }
-<div class="view-mode">        
-<h3>${c.name}</h3>        
-<p>${c.area}</p>           
-</div>        
- <div class="edit-mode" style="display:none;">        
-<input id="edit-name-${c.phone}" value="${c.name}">        
-<input id="edit-area-${c.phone}" value="${c.area}">        
-<input id="edit-phone-${c.phone}" value="${c.phone}">        
-<button onclick="saveInlineEdit('${c.phone}')">💾 Save</button>        
-</div>        
-</div>        
-`;        
-});        
+f.forEach(c=>{
+  list.innerHTML += `
+  <div class="card" id="card-${c.phone}">
+    ${c.owner === currentUser
+      ? `<span class="edit-btn" onclick="enableInlineEdit('${c.phone}')">✏️</span>`
+      : ``}
+
+    <div class="view-mode">
+      <h3>${c.name}</h3>
+      <p>${c.area}</p>
+
+      ${
+        c.status === "approved"
+          ? `<a class="call" href="tel:${c.phone}">📞 কল করুন</a>`
+          : c.owner === currentUser
+            ? `<p style="color:#ff9800;font-size:13px;">⏳ Admin approval pending</p>`
+            : ``
+      }
+    </div>
+
+    <div class="edit-mode" style="display:none;">
+      <input id="edit-name-${c.phone}" value="${c.name}">
+      <input id="edit-area-${c.phone}" value="${c.area}">
+      <input id="edit-phone-${c.phone}" value="${c.phone}">
+      <button onclick="saveInlineEdit('${c.phone}')">💾 Save</button>
+    </div>
+  </div>`;
+});
   }        
-/* Edit */        
-function startEdit(phone){        
-  let all=JSON.parse(localStorage.getItem("contacts")||"[]");        
-  let c=all.find(x=>x.phone===phone && x.owner===currentUser);        
-  if(!c)return;        
-        
-  name.value=c.name;        
-  area.value=c.area;        
-  phone.value=c.phone;        
-        
-  all = all.filter(x=>!(x.phone===phone && x.owner===currentUser));        
-  localStorage.setItem("contacts",JSON.stringify(all));        
-  inlineAddForm.style.display="block";        
-}        
 function loadPending(){
         if(currentUser !== ADMIN_ID){
   alert("Unauthorized");
