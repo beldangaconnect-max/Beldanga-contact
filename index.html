@@ -13,19 +13,13 @@ body{
   background:#f4f6f8;
   padding-bottom:70px;
 }
-
-/* Header */
 header{
   background:#1976d2;
   color:#fff;
   padding:16px;
   text-align:center;
 }
-
-/* Section */
 section{padding:14px;}
-
-/* Search */
 #searchInput{
   width:100%;
   padding:12px;
@@ -33,8 +27,6 @@ section{padding:14px;}
   border:1px solid #ccc;
   margin-bottom:10px;
 }
-
-/* Service Card */
 .service{
   background:#fff;
   padding:14px;
@@ -44,8 +36,6 @@ section{padding:14px;}
   box-shadow:0 4px 12px rgba(0,0,0,.12);
   cursor:pointer;
 }
-
-/* Contact Card */
 .card{
   background:#fff;
   padding:16px;
@@ -53,8 +43,6 @@ section{padding:14px;}
   border-radius:16px;
   box-shadow:0 6px 16px rgba(0,0,0,.15);
 }
-
-/* Call / Email Button */
 .call{
   display:block;
   margin-top:12px;
@@ -66,18 +54,6 @@ section{padding:14px;}
   text-decoration:none;
   font-weight:bold;
 }
-
-/* Admin actions */
-.admin-actions button{
-  margin-top:10px;
-  margin-right:6px;
-  padding:8px 12px;
-  border-radius:6px;
-  border:1px solid #ccc;
-  background:#fff;
-}
-
-/* Add Form */
 #addForm{
   background:#fff;
   padding:16px;
@@ -99,11 +75,7 @@ section{padding:14px;}
   border-radius:12px;
   font-weight:bold;
 }
-
-/* Admin only */
 .admin-only{display:none;}
-
-/* Bottom Navigation */
 #bottomNav{
   position:fixed;
   bottom:0;
@@ -124,8 +96,6 @@ section{padding:14px;}
 #bottomNav button.active{
   color:#1976d2;
 }
-
-/* Footer */
 footer{
   background:#1976d2;
   color:white;
@@ -147,9 +117,21 @@ footer{
 <section id="home">
   <input id="searchInput" placeholder="🔍 নাম বা কাজ লিখুন" onkeyup="searchContact()">
 
+  <!-- SERVICES -->
   <div class="service" onclick="selectService('ফার্নিচার মেকার')">🪑 ফার্নিচার মেকার</div>
   <div class="service" onclick="selectService('পেইন্টার')">🎨 পেইন্টার</div>
   <div class="service" onclick="selectService('ইলেকট্রিশিয়ান')">💡 ইলেকট্রিশিয়ান</div>
+
+  <div class="service" onclick="selectService('রাজমিস্ত্রি')">🧱 রাজমিস্ত্রি</div>
+  <div class="service" onclick="selectService('প্লাম্বার')">🚰 প্লাম্বার</div>
+  <div class="service" onclick="selectService('গ্লাস ফিটার')">🪟 গ্লাস ফিটার</div>
+  <div class="service" onclick="selectService('অ্যালুমিনিয়াম ফ্যাব্রিকেশন')">🚪 অ্যালুমিনিয়াম ফ্যাব্রিকেশন</div>
+  <div class="service" onclick="selectService('ক্লিনার')">🧹 ক্লিনার</div>
+  <div class="service" onclick="selectService('ফায়ার সার্ভিস')">🧯 ফায়ার সার্ভিস</div>
+  <div class="service" onclick="selectService('মোবাইল রিপেয়ার')">🛠️ মোবাইল রিপেয়ার</div>
+  <div class="service" onclick="selectService('টেইলার')">🧵 টেইলার</div>
+  <div class="service" onclick="selectService('হাউস কিপার')">🏠 হাউস কিপার</div>
+  <div class="service" onclick="selectService('টেম্পো / পিকআপ ভ্যান')">🚚 টেম্পো / পিকআপ ভ্যান</div>
 
   <div id="contactList"></div>
 </section>
@@ -186,7 +168,6 @@ footer{
 const ADMIN_PASSWORD = "5234";
 let isAdmin = false;
 
-/* Navigation */
 function go(id){
   ["home","add","admin"].forEach(s=>{
     document.getElementById(s).style.display="none";
@@ -198,7 +179,6 @@ function go(id){
     .classList.add("active");
 }
 
-/* Admin Login */
 function adminLogin(){
   if(adminPass.value === ADMIN_PASSWORD){
     isAdmin = true;
@@ -210,27 +190,24 @@ function adminLogin(){
   }
 }
 
-/* Admin Logout */
 function adminLogout(){
   isAdmin = false;
   document.querySelectorAll(".admin-only").forEach(e=>e.style.display="none");
   go("home");
 }
 
-/* Add Contact */
 function addContact(){
+  if(!isAdmin){
+    alert("Admin login প্রয়োজন");
+    return;
+  }
   if(!name.value || !work.value || !phone.value){
     alert("সব ঘর পূরণ করুন");
     return;
   }
 
   let data = JSON.parse(localStorage.getItem("contacts") || "[]");
-  data.push({
-    name:name.value,
-    work:work.value,
-    area:area.value,
-    phone:phone.value
-  });
+  data.push({name:name.value, work:work.value, area:area.value, phone:phone.value});
   localStorage.setItem("contacts", JSON.stringify(data));
 
   name.value = work.value = area.value = phone.value = "";
@@ -238,7 +215,6 @@ function addContact(){
   go("home");
 }
 
-/* Load Contacts */
 function loadContacts(){
   contactList.innerHTML="";
   let data = JSON.parse(localStorage.getItem("contacts") || "[]");
@@ -255,7 +231,6 @@ function loadContacts(){
   });
 }
 
-/* Search */
 function searchContact(){
   let q = searchInput.value.toLowerCase();
   document.querySelectorAll(".contact").forEach(c=>{
@@ -263,13 +238,16 @@ function searchContact(){
   });
 }
 
-/* Service select */
 function selectService(s){
+  if(!isAdmin){
+    alert("এই অপশন ব্যবহার করতে Admin Login করুন");
+    go("admin");
+    return;
+  }
   work.value = s;
   go("add");
 }
 
-/* Init */
 go("home");
 loadContacts();
 </script>
