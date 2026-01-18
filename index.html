@@ -96,7 +96,7 @@ section{padding:14px;}
 
     <!-- ✅ LOGIN BUTTON (এইটাই সবচেয়ে গুরুত্বপূর্ণ) -->
     <button
-      onclick="login()"
+      <button type="button" onclick="login()">
       style="
         width:100%;
         padding:12px;
@@ -223,15 +223,8 @@ section{padding:14px;}
 </div> <!-- userProfile close -->
         
 <script>      
-const ADMIN_ID = "admin@beldanga";  
 function go(id){
-  const sections = [
-    "login",
-    "home",
-    "servicePage",
-    "userProfile",
-    "admin"
-  ];
+  const sections = ["login","home","servicePage","userProfile","admin"];
 
   sections.forEach(sec=>{
     const el = document.getElementById(sec);
@@ -241,6 +234,12 @@ function go(id){
   const target = document.getElementById(id);
   if(target) target.style.display = "block";
 
+  // 🔥 IMPORTANT: Login page-এ bottom nav hide
+  const bottomNav = document.getElementById("bottomNav");
+  if(bottomNav){
+    bottomNav.style.display = (id === "login") ? "none" : "flex";
+  }
+
   // Header indicator
   const indicator = document.getElementById("pageIndicator");
   if(indicator){
@@ -248,10 +247,9 @@ function go(id){
       id === "home" ? "🏠 Home" :
       id === "login" ? "🔐 Login" :
       id === "userProfile" ? "👤 Profile" :
-      id === "admin" ? "🛡️ Admin" :
-      "";
+      id === "admin" ? "🛡️ Admin" : "";
   }
-}
+        }
 let currentUser = localStorage.getItem("currentUser");        
 let currentService = "";        
         
@@ -278,7 +276,7 @@ function login(){
   localStorage.setItem("currentUser", u);
 
   document.getElementById("profileUserId").innerText = u;
-
+const ADMIN_ID = "admin@beldanga";  
   if(u === ADMIN_ID){
     go("admin");
     loadPending();
@@ -539,13 +537,7 @@ function reject(index){
   alert("❌ Rejected");
   loadPending();
         }
-        
 /* Init */
-if(currentUser){
-  document.getElementById("login").style.display = "none";
-  document.getElementById("userProfile").style.display = "block";
-  document.getElementById("profileUserId").innerText = currentUser;
-
 if(currentUser){
   document.getElementById("profileUserId").innerText = currentUser;
 
