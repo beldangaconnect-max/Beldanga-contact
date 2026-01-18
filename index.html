@@ -117,9 +117,37 @@ section{padding:14px;}
 
   </div>
 </section>
+<!-- ADMIN PANEL -->
 <section id="admin" style="display:none;">
-  <h3>🛡️ Admin Approval Panel</h3>
-  <div id="pendingList"></div>
+
+  <div style="
+    background:#fff;
+    padding:16px;
+    border-radius:16px;
+    box-shadow:0 6px 16px rgba(0,0,0,.15);
+  ">
+
+    <h2 style="margin:0 0 6px;">🛡️ Admin Dashboard</h2>
+    <p style="font-size:13px;opacity:.7;">
+      Pending service approval requests
+    </p>
+
+    <div style="
+      background:#1976d2;
+      color:#fff;
+      padding:10px;
+      border-radius:12px;
+      margin:12px 0;
+      font-weight:bold;
+      text-align:center;
+    ">
+      ⏳ Pending Requests: <span id="pendingCount">0</span>
+    </div>
+
+    <div id="pendingList"></div>
+
+  </div>
+
 </section>
 <!-- HOME -->        
 <section id="home" style="display:none;">        
@@ -414,15 +442,56 @@ function loadPending(){
     return;
   }
 
-  pending.forEach((c,i)=>{
-    list.innerHTML += `
-      <div class="card">
-        <h4>${c.name} (${c.work})</h4>
-        <p>${c.area} | ${c.phone}</p>
-        <button onclick="approve(${i})">✅ Approve</button>
+  document.getElementById("pendingCount").innerText = pending.length;
+
+pending.forEach((c,i)=>{
+  list.innerHTML += `
+    <div class="card">
+
+      <h3 style="margin:0;">${c.name}</h3>
+      <p style="margin:4px 0;font-size:13px;">
+        🛠️ ${c.work}
+      </p>
+      <p style="font-size:13px;">
+        📍 ${c.area}<br>
+        📞 ${c.phone}
+      </p>
+
+      <div style="display:flex;gap:10px;margin-top:12px;">
+        <button
+          onclick="approve(${i})"
+          style="
+            flex:1;
+            padding:10px;
+            border:none;
+            border-radius:10px;
+            background:#2e7d32;
+            color:#fff;
+            font-weight:bold;
+          "
+        >
+          ✅ Accept
+        </button>
+
+        <button
+          onclick="reject(${i})"
+          style="
+            flex:1;
+            padding:10px;
+            border:none;
+            border-radius:10px;
+            background:#d32f2f;
+            color:#fff;
+            font-weight:bold;
+          "
+        >
+          ❌ Reject
+        </button>
       </div>
-    `;
-  });
+
+    </div>
+  `;
+});
 }
 
 function approve(index){
@@ -430,15 +499,34 @@ function approve(index){
   let pending = all.filter(c => c.status === "pending");
 
   let target = pending[index];
+
   let realIndex = all.findIndex(
     c => c.phone === target.phone && c.owner === target.owner
   );
 
   all[realIndex].status = "approved";
+
   localStorage.setItem("contacts", JSON.stringify(all));
 
+  alert("✅ Approved");
   loadPending();
-            }
+}
+
+function reject(index){
+  let all = JSON.parse(localStorage.getItem("contacts") || "[]");
+  let pending = all.filter(c => c.status === "pending");
+
+  let target = pending[index];
+
+  all = all.filter(
+    c => !(c.phone === target.phone && c.owner === target.owner)
+  );
+
+  localStorage.setItem("contacts", JSON.stringify(all));
+
+  alert("❌ Rejected");
+  loadPending();
+        }
         
 /* Init */
 if(currentUser){
