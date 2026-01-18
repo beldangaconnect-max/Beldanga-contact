@@ -201,7 +201,27 @@ section{padding:14px;}
     <strong>আইডি:</strong>        
     <span id="profileUserId"></span>        
   </p>        
- <button
+<!-- ADMIN DASHBOARD BUTTON (শুধু admin দেখবে) -->
+<button
+  id="adminBtn"
+  onclick="go('admin')"
+  style="
+    width:100%;
+    padding:12px;
+    border-radius:12px;
+    background:#1976d2;
+    color:#fff;
+    border:none;
+    font-weight:bold;
+    margin-top:10px;
+    display:none;
+  "
+>
+  🛡️ Admin Dashboard
+</button>
+
+<!-- LOGOUT BUTTON (সবাই দেখবে) -->
+<button
   onclick="logout()"
   style="
     width:100%;
@@ -211,28 +231,11 @@ section{padding:14px;}
     color:#fff;
     border:none;
     font-weight:bold;
-    margin-top:14px;
+    margin-top:12px;
   "
 >
   🚪 Logout
- </button>       
-  <button        
-    onclick="go('home')"        
-    style="        
-      width:100%;        
-      padding:12px;        
-      border-radius:12px;        
-      background:#1976d2;        
-      color:#fff;        
-      border:none;        
-      font-weight:bold;        
-      margin-top:10px;        
-    "        
-  >        
-    ➡️ সার্ভিস দেখুন        
-  </button>        
-        
-</div>  
+</button>  
         
 <script>      
 const ADMIN_ID = "admin@beldanga";        
@@ -535,12 +538,13 @@ if(currentUser){
   document.getElementById("profileUserId").innerText = currentUser;
 
   if(currentUser === ADMIN_ID){
+    document.getElementById("adminBtn").style.display = "block";
     go("admin");
     loadPending();
   }
 }else{
   go("login");
-}  
+        }
   </script> 
         
 </body>        
