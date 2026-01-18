@@ -194,7 +194,7 @@ section{padding:14px;}
   <button id="navLogin" onclick="go('login')">🔐 Login</button>
   <button id="navLogout" onclick="logout()">🚪 Logout</button>
 </div> 
-    <!-- USER PROFILE -->        
+<!-- USER PROFILE -->        
 <div id="userProfile" style="display:none;">        
         
   <h3 style="margin-top:10px;">👤 আপনার প্রোফাইল</h3>        
@@ -203,44 +203,55 @@ section{padding:14px;}
     <strong>আইডি:</strong>        
     <span id="profileUserId"></span>        
   </p>        
-<!-- ADMIN DASHBOARD BUTTON (শুধু admin দেখবে) -->
-<button
-  id="adminBtn"
-  onclick="go('admin')"
-  style="
-    width:100%;
-    padding:12px;
-    border-radius:12px;
-    background:#1976d2;
-    color:#fff;
-    border:none;
-    font-weight:bold;
-    margin-top:10px;
-    display:none;
-  "
->
-  🛡️ Admin Dashboard
-</button>
 
-<!-- LOGOUT BUTTON (সবাই দেখবে) -->
-<button
-  onclick="logout()"
-  style="
-    width:100%;
-    padding:12px;
-    border-radius:12px;
-    background:#d32f2f;
-    color:#fff;
-    border:none;
-    font-weight:bold;
-    margin-top:12px;
-  "
->
-  🚪 Logout
-</button>  
+  <button
+    onclick="logout()"
+    style="
+      width:100%;
+      padding:12px;
+      border-radius:12px;
+      background:#d32f2f;
+      color:#fff;
+      border:none;
+      font-weight:bold;
+      margin-top:12px;
+    "
+  >
+    🚪 Logout
+  </button>
+
+</div> <!-- userProfile close -->
         
 <script>      
-const ADMIN_ID = "admin@beldanga";        
+const ADMIN_ID = "admin@beldanga";  
+function go(id){
+  const sections = [
+    "login",
+    "home",
+    "servicePage",
+    "userProfile",
+    "admin"
+  ];
+
+  sections.forEach(sec=>{
+    const el = document.getElementById(sec);
+    if(el) el.style.display = "none";
+  });
+
+  const target = document.getElementById(id);
+  if(target) target.style.display = "block";
+
+  // Header indicator
+  const indicator = document.getElementById("pageIndicator");
+  if(indicator){
+    indicator.innerText =
+      id === "home" ? "🏠 Home" :
+      id === "login" ? "🔐 Login" :
+      id === "userProfile" ? "👤 Profile" :
+      id === "admin" ? "🛡️ Admin" :
+      "";
+  }
+}
 let currentUser = localStorage.getItem("currentUser");        
 let currentService = "";        
         
@@ -536,6 +547,8 @@ if(currentUser){
   document.getElementById("profileUserId").innerText = currentUser;
 
 if(currentUser){
+  document.getElementById("profileUserId").innerText = currentUser;
+
   if(currentUser === ADMIN_ID){
     go("admin");
     loadPending();
