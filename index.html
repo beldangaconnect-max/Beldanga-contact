@@ -291,28 +291,31 @@ function updateNav(){
 }
  /* Login */
 function login(){
-function login(){
-  const u = document.getElementById("userId").value.trim();
+  const input = document.getElementById("userId");
+  const u = input.value.trim();
 
   if(!u){
     alert("মোবাইল বা ইমেইল দিন");
     return;
   }
 
+  // login save
   localStorage.setItem("currentUser", u);
+  currentUser = u;
 
+  // profile এ user দেখানো
+  document.getElementById("profileUserId").innerText = u;
+
+  // admin / user routing
   if(u === "admin@beldanga"){
     go("admin");
   }else{
     go("home");
   }
 
+  updateNav();
   alert("Login successful ✅");
           }
-    .catch((error) => {
-      alert(error.message);
-    });
-}
 /* Logout */        
 function logout(){
   localStorage.removeItem("currentUser");
