@@ -189,9 +189,11 @@ section{padding:14px;}
         
 <!-- Bottom Nav -->        
 <div id="bottomNav">
-  <button onclick="go('home')">🏠 Home</button>
-  <button onclick="go('userProfile')">👤 Profile</button>
-</div>      
+  <button id="navHome" onclick="go('home')">🏠 Home</button>
+  <button id="navProfile" onclick="go('userProfile')">👤 Profile</button>
+  <button id="navLogin" onclick="go('login')">🔐 Login</button>
+  <button id="navLogout" onclick="logout()">🚪 Logout</button>
+</div> 
     <!-- USER PROFILE -->        
 <div id="userProfile" style="display:none;">        
         
@@ -243,23 +245,17 @@ let currentUser = localStorage.getItem("currentUser");
 let currentService = "";        
         
 /* Navigation */        
-function go(id){
-  ["login","home","servicePage","admin","userProfile"].forEach(s=>{
-    const el = document.getElementById(s);
-    if(el) el.style.display = "none";
-  });
+function updateNav(){
+  const isLoggedIn = !!currentUser;
 
-  document.getElementById(id).style.display = "block";
-
-  document.getElementById("pageIndicator").innerText =
-    id==="home"?"🏠 Home":
-    id==="servicePage"?currentService:
-    id==="admin"?"🛡️ Admin":"";
-        }
+  document.getElementById("navHome").style.display = isLoggedIn ? "block" : "none";
+  document.getElementById("navProfile").style.display = isLoggedIn ? "block" : "none";
+  document.getElementById("navLogout").style.display = isLoggedIn ? "block" : "none";
+  document.getElementById("navLogin").style.display = isLoggedIn ? "none" : "block";
+}
         /* Login */
 function login(){
   const u = userId.value.trim();
-
   if(!u){
     alert("মোবাইল বা ইমেইল দিন");
     return;
@@ -268,27 +264,25 @@ function login(){
   currentUser = u;
   localStorage.setItem("currentUser", u);
 
-  // সব পেজ hide
-  go("userProfile");
-
-  document.getElementById("profileUserId").innerText = u;
-
-  // Admin হলে admin panel
   if(u === ADMIN_ID){
     go("admin");
     loadPending();
+  }else{
+    go("userProfile");
   }
 
-  alert("OTP Verified ✅");
-  userId.value = "";
+  document.getElementById("profileUserId").innerText = u;
+  updateNav();
 }
         
 /* Logout */        
-function logout(){        
-  localStorage.removeItem("currentUser");        
-  currentUser=null;        
-  go("login");        
-}        
+function logout(){
+  localStorage.removeItem("currentUser");
+  currentUser = null;
+
+  go("login");
+  updateNav();
+}
         
 /* Service Open */        
 function openService(service){        
@@ -537,14 +531,18 @@ if(currentUser){
   document.getElementById("userProfile").style.display = "block";
   document.getElementById("profileUserId").innerText = currentUser;
 
+if(currentUser){
   if(currentUser === ADMIN_ID){
-    document.getElementById("adminBtn").style.display = "block";
     go("admin");
     loadPending();
+  }else{
+    go("userProfile");
   }
 }else{
   go("login");
-        }
+}
+
+updateNav();
   </script> 
         
 </body>        
