@@ -255,7 +255,9 @@ function updateNav(){
 }
         /* Login */
 function login(){
-  const u = userId.value.trim();
+  const input = document.getElementById("userId");
+  const u = input.value.trim();
+
   if(!u){
     alert("মোবাইল বা ইমেইল দিন");
     return;
@@ -264,6 +266,8 @@ function login(){
   currentUser = u;
   localStorage.setItem("currentUser", u);
 
+  document.getElementById("profileUserId").innerText = u;
+
   if(u === ADMIN_ID){
     go("admin");
     loadPending();
@@ -271,10 +275,10 @@ function login(){
     go("userProfile");
   }
 
-  document.getElementById("profileUserId").innerText = u;
   updateNav();
-}
-        
+  alert("OTP Verified ✅");
+  input.value = "";
+        }
 /* Logout */        
 function logout(){
   localStorage.removeItem("currentUser");
