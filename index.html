@@ -99,7 +99,7 @@ section{padding:14px;}
   onclick="login()"
   style="width:100%; padding:12px; border-radius:12px; background:#1976d2; color:#fff; border:none; font-weight:bold; font-size:15px;"
 >
-  🔐 OTP দিয়ে লগইন করুন
+  🔐লগইন করুন
 </button>
 <div id="recaptcha-container"></div>
           
@@ -291,38 +291,24 @@ function updateNav(){
 }
  /* Login */
 function login(){
-  const phoneInput = document.getElementById("userId");
-  let phone = phoneInput.value.trim();
+function login(){
+  const u = document.getElementById("userId").value.trim();
 
-  if(!phone){
-    alert("মোবাইল নম্বর দিন");
+  if(!u){
+    alert("মোবাইল বা ইমেইল দিন");
     return;
   }
 
-  // India country code
-  if(!phone.startsWith("+")){
-    phone = "+91" + phone;
+  localStorage.setItem("currentUser", u);
+
+  if(u === "admin@beldanga"){
+    go("admin");
+  }else{
+    go("home");
   }
 
-  signInWithPhoneNumber(auth, phone, window.recaptchaVerifier)
-    .then((confirmationResult) => {
-      window.confirmationResult = confirmationResult;
-
-      const otp = prompt("আপনার OTP দিন");
-
-      return confirmationResult.confirm(otp);
-    })
-    .then((result) => {
-      currentUser = result.user.phoneNumber;
-      localStorage.setItem("currentUser", currentUser);
-
-      document.getElementById("profileUserId").innerText = currentUser;
-
-      go("userProfile");
-      updateNav();
-
-      alert("Login successful ✅");
-    })
+  alert("Login successful ✅");
+          }
     .catch((error) => {
       alert(error.message);
     });
